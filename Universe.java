@@ -91,7 +91,7 @@ public class Universe {
 
         //Update num_compressed of both droplets based on balanced reaction equation.
     }
-    public boolean is_empty() { return universe[current_x][current_y] == null; }
+    public boolean is_empty(int x, int y) { return universe[x][y] == null; }
     public void swap(int x_1, int y_1, int x_2, int y_2) {
         Droplet temp = null;    //Idk if this works or not
         assert false;
@@ -112,21 +112,55 @@ public class Universe {
         }
     }
     public void displace(int x, int y) {
+        int max = 1;
+        int min = 4;
+        
         if (universe[x][y].get_num_compressed() > 1) {
-            //Randomly pick direction (up, down, left  right)
-
+            
+            //Randomly pick direction (up(1), down(3), left(4),  right(2))
+            int random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
+            System.out.println(random_int);
+            
+            switch  (random_int) {
+                case 1:
+                    //up
+                    if (is_empty(x, y)){
+                        universe[x][y] = universe[x][y+1];
+                    }
+                case 2:
+                    //right
+                    if (is_empty(x, y)){
+                    universe[x][y] = universe[x+1][y];
+                    }
+                case 3:
+                    //down
+                    if (is_empty(x, y)){
+                    universe[x][y] = universe[x][y-1];
+                    }
+                case 4:
+                    //left
+                    if (is_empty(x, y)){
+                    universe[x][y] = universe[x-1][y];
+                    }
+            }
+            
             //Then move all contacting droplets over in that direction
-            //(if not possible pick new direction) (also set has_moved and for
+            //(if not possible pick new direction) (also set has_moved for
             //each droplet moved this way to true).
-
+            universe[current_x][current_y].set_has_moved(true);
+            
             //Then create copy(?) of compressed droplet in recently opened up space
             //(has_moved for this newly created droplet will be true).
-
+            
+            
             //Then set num_compressed of recently created droplet to
             //num_compressed of the original droplet minus 1, and set
             //num compressed of original droplet to 1.
+            
 
             //Then call displace() on the droplet that was created.
+            displace(//new droplet);
+            
         }
     }
     public void add_material() {
