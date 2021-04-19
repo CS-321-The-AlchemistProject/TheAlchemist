@@ -128,21 +128,27 @@ public class Universe {
                     if (is_empty(x, y)){
                         universe[x][y] = universe[x][y+1];
                     }
+                    break;
                 case 2:
                     //right
                     if (is_empty(x, y)){
                     universe[x][y] = universe[x+1][y];
                     }
+                    break;
                 case 3:
                     //down
                     if (is_empty(x, y)){
                     universe[x][y] = universe[x][y-1];
                     }
+                    break;
                 case 4:
                     //left
                     if (is_empty(x, y)){
                     universe[x][y] = universe[x-1][y];
                     }
+                    break;
+                default:
+                    break;
             }
             
             //Then move all contacting droplets over in that direction
