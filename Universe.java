@@ -120,8 +120,9 @@ public class Universe {
             //Randomly pick direction (up(1), down(3), left(4),  right(2))
             int random_int = (int)Math.floor(Math.random()*(max-min+1)+min);
             System.out.println(random_int);
+            Droplet temp_compressed = universe[x][y];
             
-            switch  (random_int) {
+            switch (random_int) {
                 case 1:
                     //up
                     if (is_empty(x, y)){
@@ -147,20 +148,20 @@ public class Universe {
             //Then move all contacting droplets over in that direction
             //(if not possible pick new direction) (also set has_moved for
             //each droplet moved this way to true).
-            universe[current_x][current_y].set_has_moved(true);
+            universe[x][y].set_has_moved(true);
             
             //Then create copy(?) of compressed droplet in recently opened up space
             //(has_moved for this newly created droplet will be true).
-            
+            temp_compressed.set_has_moved(true);
             
             //Then set num_compressed of recently created droplet to
             //num_compressed of the original droplet minus 1, and set
             //num compressed of original droplet to 1.
+            temp_compressed.set_num_compressed(universe[x][y].get_num_compressed()-1);
+            universe[x][y].set_num_compressed(1);
             
-
             //Then call displace() on the droplet that was created.
-            displace(//new droplet);
-            
+            displace(x, y);
         }
     }
     public void add_material() {
