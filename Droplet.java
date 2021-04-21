@@ -95,13 +95,53 @@ public class Droplet {
     public int get_num_compressed() { return num_compressed; }
 
     //setters
+    
+    /**
+    * The set_chem_type method will change the value of the chemical type
+    * @param new_value, is the new type of chemical
+    */
     public void set_chem_type(Chemical new_value) { chem_type = new_value; }
+    
+    /**
+    * The set_temperature method will change the value of the temperature variable.
+    * @param new_value, the new value of temperature
+    */
     public void set_temperature(double new_value) { temperature = new_value; }
+    
+    /**
+    * The set_density method will change the value of the density variable.
+    * @param new_value, the new value of the density
+    */
     public void set_density(double new_value) { density = new_value; }
+    
+    /**
+    * The set_current_state method will change the value of the current_state variable.
+    * @param new_value, the new state of the chemical
+    */
     public void set_current_state(State new_value) { current_state = new_value; }
+    
+    /**
+    * The set_dTemp method will change the value of the dtemp variable.
+    * @param new_value, the change in temperature
+    */
     public void set_dTemp(double new_value) { dTemp = new_value; }
+    
+    /**
+    * The set_has_moved method will change the value of the has_moved variable.
+    * @param new_value, true/false
+    */
     public void set_has_moved(boolean new_value) { has_moved = new_value; }
+    
+    /**
+    * The set_has_reacted method will change the value of the has_reacted variable.
+    * @param new_value, true/false
+    */
     public void set_has_reacted(boolean new_value) { has_reacted = new_value; }
+    
+    /**
+    * The set_num_compressed method will change the value of the num_compressed variable.
+    * @param new_value, the number of blocks compressed into one pixel
+    */
     public void set_num_compressed(int new_value) { num_compressed = new_value; }
 
     private Chemical chem_type;
