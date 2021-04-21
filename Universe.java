@@ -2,6 +2,13 @@ import java.util.*;
 
 public class Universe {
     //Functional methods
+    
+    /**
+    * the get_neighbor method will use the inputted shifts to find the particle at those coordinates
+    * @param shift_x will add its value to the current x coordinate.
+    * @param shift_y will add its value to the current y coordinate.
+    * @return the Droplet that is located at those coordinates
+    */
     public Droplet get_neighbor(int shift_x, int shift_y) {
         return universe[current_x + shift_x][current_y + shift_y];
     }
@@ -91,7 +98,15 @@ public class Universe {
 
         //Update num_compressed of both droplets based on balanced reaction equation.
     }
+    
+    /**
+    * The is_empty method will check if the inputted coordinates are empty.
+    * @param x is the x axis coordniate
+    * @param y is the y axis coordniate 
+    * @return true/false
+    */
     public boolean is_empty(int x, int y) { return universe[x][y] == null; }
+    
     public void swap(int x_1, int y_1, int x_2, int y_2) {
         Droplet temp = null;    //Idk if this works or not
         assert false;
@@ -100,6 +115,11 @@ public class Universe {
         temp.copy_into(universe[x_2][y_2]);
     }
     
+    /**
+    * The fall method will be called each frame to determine if the pixel should be moved. It will first check the pixel's state to determine the movement pattern.
+    * Once that is determined it will check the surrounding pixels to see if they are empty and move to an empty location. It then marks a boolean as true to prevent
+    * it from being moved more than once per frame.
+    */
     public void fall() {
        if (universe[current_x][current_y].get_current_state() == State.solid) {
             //Solid movement rules. Consult video and articles I sent over discord. 
@@ -311,26 +331,108 @@ public class Universe {
     }
 
     //Getters
+    
+    /**
+    * The get_droplet method will use the inputted coordinates and return the droplet at that location.
+    * @param x is the coordinate value for the x-axis.
+    * @param y is the coordinate value for the y-axis.
+    * @return the droplet at the coordinate values.
+    */
     public Droplet get_droplet(int x, int y) { return universe[x][y]; }
+    
+    /**
+    * The get_cursor_x method will return the mouse position on the x-axis.
+    * @return cursor_x the mouse position on the x-axis.
+    */
     public int get_cursor_x() { return cursor_x; }
+    
+    /**
+    * The get_cursor_y method will return the mouse position on the y-axis.
+    * @return cursor_y the mouse position on the y-axis.
+    */
     public int get_cursor_y() { return cursor_y; }
+    
+    /**
+    * The get_current_x will return the value of the current coordinate on the x-axis.
+    * @return current_x the current x coordinate
+    */
     public int get_current_x() { return current_x; }
+    
+    /**
+    * The get_current_y will return the value of the current coordinate on the y-axis.
+    * @return current_y the current y coordinate
+    */
     public int get_current_y() { return current_y; }
+    
+    /**
+    */
     public double get_g() { return g; }
+    
+    /**
+    * the get_pressure_constant method will return the value of the constant pressure.
+    * @return pressure_constant's value
+    */
     public double get_pressure_constant() { return pressure_constant; }
+    
+    /**
+    * the get_dt method will return the value of the 
+    */
     public double get_dt() { return dt; }
     public double get_dx() { return dx; }
     public double get_inv_dx_squared() { return inv_dx_squared; }
 
     //Setters
+    
+    /**
+    * the set_droplet method will take the inputted coordniate and will have the droplet at that position equal to the new droplet.
+    * @param x, the coordinate on the x-axis
+    * @param y, the coordinate on the y-axis
+    * @param new_value, the new droplet
+    */
     public void set_droplet(int x, int y, Droplet new_value) { universe[x][y] = new_value; }
+    
+    /**
+    * The set_cursor_x method will make the variable cursor_x equal the new inputted value.
+    * @param new_value, the new mouse position on the x-axis
+    */
     public void set_cursor_x(int new_value) { cursor_x = new_value; }
+    
+    /**
+    * The set_cursor_y method will make the variable cursor_y equal the new inputted value.
+    * @param new_value, the new mouse position on the y-axis
+    */
     public void set_cursor_y(int new_value) { cursor_y = new_value; }
+    
+    /**
+    * The set_current_x method will make the variable current_x equal the new inputted value.
+    * @param new_value, the new coordinate on the x-axis
+    */
     public void set_current_x(int new_value) { current_x = new_value; }
+    
+    /**
+    * The set_current_y method will make the variable current_y equal the new inputted value.
+    * @param new_value, the new coordinate on the y-axis
+    */
     public void set_current_y(int new_value) { current_y = new_value; }
+    
+    /**
+    */
     public void set_g(double new_value) { g = new_value; }
+    
+    /**
+    * The set_pressure_constant method will make the variable pressure_constant equal the new inputted value.
+    * @param new_value, the new pressure constant
+    */
     public void set_pressure_constant(double new_value) { pressure_constant = new_value; }
+    
+    /**
+    * The set_dt method will make the variable dt equal the new inputted value.
+    * @param new_value, the new dt value
+    */
     public void set_dt(double new_value) { dt = new_value; }
+    
+    /**
+    */
     public void set_dx(double new_value) {
         dx = new_value;
         inv_dx_squared = 1 / (dx * dx);
