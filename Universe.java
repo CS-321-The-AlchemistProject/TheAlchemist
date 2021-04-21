@@ -208,48 +208,72 @@ public class Universe {
             //move more if their temperature is higher.
             int randomInteger = (int)Math.floor(Math.random()*(8-1+1)+1);
             switch(randomInteger){
-             // I still need to set up checking if it is empty
+             
              //will decide which random direction
                 case 1:
                     //up
-                    universe[current_x][current_y].copy_into(universe[current_x][current_y + 1]);
-                    set_droplet(current_x, current_y, null);
-                    break;
+                    if(is_empty(current_x, current_y +1)){
+                        universe[current_x][current_y].copy_into(universe[current_x][current_y + 1]);
+                        universe[current_x][current_y + 1].set_has_moved(true);
+                        set_droplet(current_x, current_y, null);
+                        break;
+                    }
                 case 2:
                     //up right
-                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y + 1]);
-                    set_droplet(current_x, current_y, null);
-                    break;
+                    if(is_empty(current_x + 1, current_y + 1)){
+                        universe[current_x][current_y].copy_into(universe[current_x + 1][current_y + 1]);
+                        set_droplet(current_x, current_y, null);
+                        universe[current_x + 1][current_y + 1].set_has_moved(true);
+                        break;
+                    }
                 case 3:
                     //up left
-                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y + 1]);
-                    set_droplet(current_x, current_y, null);
-                    break;
+                    if(is_empty(current_x - 1, current_y + 1)){
+                        universe[current_x][current_y].copy_into(universe[current_x - 1][current_y + 1]);
+                        set_droplet(current_x, current_y, null);
+                        universe[current_x - 1][current_y +1].set_has_moved(true);
+                        break;
+                    }
                 case 4:
                     //right
-                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y]);
-                    set_droplet(current_x, current_y, null);
-                    break;
+                    if(is_empty(current_x + 1, current_y)){
+                        universe[current_x][current_y].copy_into(universe[current_x + 1][current_y]);
+                        set_droplet(current_x, current_y, null);
+                        universe[current_x + 1][current_y].set_has_moved(true);
+                        break;
+                    }
                 case 5:
                     //left
-                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y]);
-                    set_droplet(current_x, current_y, null);
-                    break;
+                    if(is_empty(current_x - 1, current_y)){
+                        universe[current_x][current_y].copy_into(universe[current_x - 1][current_y]);
+                        set_droplet(current_x, current_y, null);
+                        universe[current_x - 1][current_y].set_has_moved(true);
+                        break;
+                    }
                 case 6:
                     //below
-                    universe[current_x][current_y].copy_into(universe[current_x][current_y -1]);
-                    set_droplet(current_x, current_y, null);
-                    break;
+                    if(is_empty(current_x, current_y - 1)){
+                        universe[current_x][current_y].copy_into(universe[current_x][current_y -1]);
+                        set_droplet(current_x, current_y, null);
+                        universe[current_x][current_y - 1].set_has_moved(true);
+                        break;
+                    }
                 case 7:
                     //below right
-                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y - 1]);
-                    set_droplet(current_x,current_y,null);
-                    break;
+                    if(is_empty(current_x + 1, current_y - 1)){
+                        universe[current_x][current_y].copy_into(universe[current_x + 1][current_y - 1]);
+                        set_droplet(current_x,current_y,null);
+                        universe[current_x + 1][current_y - 1].set_has_moved(true);
+                        break;
+                    }
                 case 8:
                     //below left
-                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y - 1]);
-                    set_droplet(current_x, current_y, null);
-                    break;
+                    if(is_empty(current_x - 1, current_y - 1)){
+                        universe[current_x][current_y].copy_into(universe[current_x - 1][current_y - 1]);
+                        set_droplet(current_x, current_y, null);
+                        universe[current_x - 1][current_y - 1].set_has_moved(true);
+                        break;
+                    }
             }
             
         }
