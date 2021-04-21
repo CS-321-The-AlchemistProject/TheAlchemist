@@ -99,17 +99,141 @@ public class Universe {
         universe[x_2][y_2].copy_into(universe[x_1][y_1]);
         temp.copy_into(universe[x_2][y_2]);
     }
+    
     public void fall() {
-        if (universe[current_x][current_y].get_current_state() == State.solid) {
-            //Solid movement rules. Consult video and articles I sent over discord.
+       if (universe[current_x][current_y].get_current_state() == State.solid) {
+            //Solid movement rules. Consult video and articles I sent over discord. 
+            boolean BelowEmpty = is_empty(current_x, current_y - 1); // variable that checks the below block
+            if(BelowEmpty == true){
+                //copies the current droplet into the new position
+                universe[current_x][current_y].copy_into(universe[current_x][current_y -1]);
+                universe[current_x][current_y - 1].set_has_moved(true); // marks that it has been move
+                set_droplet(current_x, current_y, null); //makes the current spot empty
+            }
+            else if (universe[current_x][current_y - 1].get_density() > universe[current_x][current_y].get_density()){
+                //it will check the right and left lower blocks to see if empty
+                boolean belowEmptyRight = is_empty(current_x + 1, current_y - 1);
+                boolean belowEmptyLeft = is_empty(current_x - 1, current_y - 1);
+              if(belowEmptyLeft == true){
+                  //moves the block left if it is empty and the one below is full
+                  universe[current_x][current_y].copy_into(universe[current_x - 1][current_y -1]);
+                  universe[current_x - 1][current_y - 1].set_has_moved(true);
+                  set_droplet(current_x, current_y, null);
+              }
+              else if(belowEmptyRight == true){
+                  // if the right side is empty the block will move there.
+                  universe[current_x][current_y].copy_into(universe[current_x + 1][current_y - 1]);
+                  universe[current_x][current_y - 1].set_has_moved(true);
+                  set_droplet(current_x, current_y, null);
+              }
+            else if (universe[current_x][current_y].get_density() > universe[current_x][current_y - 1].get_density()){
+                //we need to swap the blocks (I need to check if this work)
+                Droplet temp = get_droplet(current_x, current_y - 1);
+                universe[current_x][current_y].copy_into(universe[current_x][current_y -1]);
+                set_droplet(current_x, current_y, temp);
+                universe[current_x][current_y].set_has_moved(true);
+                universe[current_x][current_y - 1].set_has_moved(true);
+            }
+           //if the solid does not meet any of the requirements it will stay in the same spot
         }
         else if (universe[current_x][current_y].get_current_state() == State.liquid) {
             //Liquid movement rules. Consult video I sent over discord.
+            //Liquids will check all the below and to the sides
+            // I will need to add a random integer to prevent it from only moving left first
+            boolean BelowEmptyLiquid = is_empty(current_x, current_y - 1); // variable that checks the below block 
+            if(BelowEmptyLiquid == true){
+                universe[current_x][current_y].copy_into(universe[current_x][current_y -1]);
+                universe[current_x][current_y - 1].set_has_moved(true); // marks that it has been move
+                set_droplet(current_x, current_y, null); //makes the current spot empty
+            }
+            else if (universe[current_x][current_y].get_density() < universe[current_x][current_y - 1].get_density()){
+                boolean BelowEmptyLeftL = is_empty(current_x -1, current_y - 1);
+                boolean BelowEmptyRightL = is_empty(current_x +1, current_y -1);
+                boolean LeftLiquid = is_empty(current_x - 1, current_y);
+                boolean RightLiquid = is_empty(current_x + 1, current_y);
+                //above gets whether all the surrounding blocks are empty
+                if(BelowEmptyLeftL == true){
+                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y -1]);
+                    set_droplet(current_x, current_y, null);
+                    universe[current_x - 1][current_y - 1].set_has_moved(true);
+                }
+                else if(BelowEmptyRightL ==true){
+                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y -1]);
+                    universe[current_x + 1][current_y - 1].set_has_moved(true);
+                    set_droplet(current_x, current_y, null);
+                }
+                else if(LeftLiquid == true){
+                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y]);
+                    universe[current_x - 1][current_y].set_has_moved(true);
+                    set_droplet(current_x, current_y, null);
+                }
+                else if (RightLiquid == true){
+                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y]);
+                    universe[current_x + 1][current_y].set_has_moved(true);
+                    set_droplet(current_x, current_y, null);
+                }
+            }
+            else if (universe[current_x][current_y].get_density() > universe[current_x][current_y].get_density()){
+                //this means it needs to be swapped
+                Droplet temp = get_droplet(current_x, current_y - 1);
+                universe[current_x][current_y].copy_into(universe[current_x][current_y -1]);
+                set_droplet(current_x, current_y, temp);
+                universe[current_x][current_y].set_has_moved(true);
+                universe[current_x][current_y - 1].set_has_moved(true);
+            }
+            //if it does not meet any of these conditions it will stay still
         }
         else {
             //Gas movement rules. Moves in random direction. If we feelin spicy, we could make them
             //move more if their temperature is higher.
+            int randomInteger = (int)Math.floor(Math.random()*(8-1+1)+1);
+            switch(randomInteger){
+             // I still need to set up checking if it is empty
+             //will decide which random direction
+                case 1:
+                    //up
+                    universe[current_x][current_y].copy_into(universe[current_x][current_y + 1]);
+                    set_droplet(current_x, current_y, null);
+                    break;
+                case 2:
+                    //up right
+                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y + 1]);
+                    set_droplet(current_x, current_y, null);
+                    break;
+                case 3:
+                    //up left
+                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y + 1]);
+                    set_droplet(current_x, current_y, null);
+                    break;
+                case 4:
+                    //right
+                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y]);
+                    set_droplet(current_x, current_y, null);
+                    break;
+                case 5:
+                    //left
+                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y]);
+                    set_droplet(current_x, current_y, null);
+                    break;
+                case 6:
+                    //below
+                    universe[current_x][current_y].copy_into(universe[current_x][current_y -1]);
+                    set_droplet(current_x, current_y, null);
+                    break;
+                case 7:
+                    //below right
+                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y - 1]);
+                    set_droplet(current_x,current_y,null);
+                    break;
+                case 8:
+                    //below left
+                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y - 1]);
+                    set_droplet(current_x, current_y, null);
+                    break;
+            }
+            
         }
+    }
     }
     public void displace(int x, int y) {
         int max = 1;
