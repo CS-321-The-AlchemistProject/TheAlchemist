@@ -55,6 +55,10 @@ public class Universe {
             }
         }
     }
+    
+    /**
+    * The calculate_dTemp method will 
+    */
     public double calculate_dTemp() {
         double top_temp;
         double bottom_temp;
@@ -399,26 +403,37 @@ public class Universe {
     public int get_current_y() { return current_y; }
     
     /**
+    * The get_g method will return the value of the variable g.
+    * @return g, the value of g
     */
     public double get_g() { return g; }
     
     /**
-    * the get_pressure_constant method will return the value of the constant pressure.
+    * The get_pressure_constant method will return the value of the constant pressure.
     * @return pressure_constant's value
     */
     public double get_pressure_constant() { return pressure_constant; }
     
     /**
-    * the get_dt method will return the value of the 
+    * The get_dt method will return the value of the variable dt
+    * @return dt, the value of the variable dt
     */
     public double get_dt() { return dt; }
+    /**
+    * The get_dx method will return the value of the variable dx
+    * @return dx, the value of the variable dx
+    */
     public double get_dx() { return dx; }
+    /**
+    * The get_inv_dx_squared method will return the value of the variable inv_dx_squared
+    * @return inv_dx_squared, the value of the variable inv_dx_squared
+    */
     public double get_inv_dx_squared() { return inv_dx_squared; }
 
     //Setters
     
     /**
-    * the set_droplet method will take the inputted coordniate and will have the droplet at that position equal to the new droplet.
+    * The set_droplet method will take the inputted coordniate and will have the droplet at that position equal to the new droplet.
     * @param x, the coordinate on the x-axis
     * @param y, the coordinate on the y-axis
     * @param new_value, the new droplet
@@ -450,6 +465,8 @@ public class Universe {
     public void set_current_y(int new_value) { current_y = new_value; }
     
     /**
+    * The set_g method will change the value of the variable g.
+    * @param new_value, the new value of the g variable
     */
     public void set_g(double new_value) { g = new_value; }
     
@@ -466,6 +483,9 @@ public class Universe {
     public void set_dt(double new_value) { dt = new_value; }
     
     /**
+    * The set_dx method will take the new value and set the variable dx equal to it.
+    * It will change the value of the inv_dx_squared variable as well.
+    * @param new_value, it is the new value of dx variable
     */
     public void set_dx(double new_value) {
         dx = new_value;
