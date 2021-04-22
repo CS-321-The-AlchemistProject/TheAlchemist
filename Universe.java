@@ -12,6 +12,10 @@ public class Universe {
     public Droplet get_neighbor(int shift_x, int shift_y) {
         return universe[current_x + shift_x][current_y + shift_y];
     }
+    
+    /**
+    * The update_universe method will update for every frame and call the methods in the class.
+    */
     public void update_universe() {
         for (current_x = 0; current_x < screen_width; current_x++) {    //Primes all droplets for update
             for (current_y = 0; current_y < screen_height; current_y++) {
@@ -279,6 +283,12 @@ public class Universe {
         }
     }
     }
+    
+    /**
+    * The displace method will spread the chemicals out if there are more than one in a single pixel
+    * @param x, the coordinate in the x-axis
+    * @param y, the coordinate in the y-axis
+    */
     public void displace(int x, int y) {
         int max = 1;
         int min = 4;
