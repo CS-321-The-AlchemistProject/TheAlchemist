@@ -321,6 +321,9 @@ public class Universe {
                         set_droplet(current_x, current_y, null);
                         universe[current_x - 1][current_y - 1].set_has_moved(true);
                         break;
+                default:
+                     break;
+                     
                     }
             }
             
