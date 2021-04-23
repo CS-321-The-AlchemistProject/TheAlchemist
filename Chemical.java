@@ -60,9 +60,9 @@ public class Chemical {
      */
     public String get_chem_key() { return chem_key; }
 
-    /**********************************************************************
-     * The get_is_insulated method will return 
-     * @return 
+    /**
+     * The get_is_insulated method will return the variable is_insulated. 
+     * @return is_insulated, the value of the variable
      */
     public boolean get_is_insulated() { return is_insulated; }
 
@@ -126,9 +126,9 @@ public class Chemical {
      */
     public void set_chem_key(String new_value) { chem_key = new_value; }
 
-    /************************************************************************
-     * The set_is_insulated method will set
-     * @param new_value
+    /**
+     * The set_is_insulated method will set a new value to the is_insulated variable.
+     * @param new_value, the new value of the is_insulated variable
      */
     public void set_is_insulated (boolean new_value) { is_insulated = new_value; }
 
