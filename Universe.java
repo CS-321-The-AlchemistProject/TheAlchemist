@@ -57,7 +57,8 @@ public class Universe {
     }
     
     /**
-    * The calculate_dTemp method will 
+    * The calculate_dTemp method will go through different conditions and calculate the correct change in temperature.
+    * @return the value of the change of temperature
     */
     public double calculate_dTemp() {
         double top_temp;
@@ -89,6 +90,9 @@ public class Universe {
                 * (top_temp + bottom_temp + left_temp + right_temp
                 - 4 * universe[current_x][current_y].get_temperature()) * dt;
     }
+ 
+ /***************************************************************
+ */
     public void react() {
         //Check if any neighbors react with current particle from reaction database.
 
@@ -115,6 +119,13 @@ public class Universe {
     */
     public boolean is_empty(int x, int y) { return universe[x][y] == null; }
     
+ /**
+ * The swap method will swap two droplets positions
+ * @param x_1, the x coordinate of the first droplet
+ * @param y_1, the y coordinate of the first droplet
+ * @param x_2, the x coordinate of the second droplet
+ * @param y_2, the y coordinate of the second droplet
+ */
     public void swap(int x_1, int y_1, int x_2, int y_2) {
         Droplet temp = null;    //Idk if this works or not
         assert false;
@@ -381,13 +392,20 @@ public class Universe {
             displace(x, y);
         }
     }
+ /************************************************************************
+ */
     public void add_material() {
         //Replace empty spaces within brush radius with target chemical
     }
+ 
+ /************************************************************************
+ */
     public void remove_material() {
         //Set all non empty spaces within bush radius to empty type. Also change
         //other variables to default values.
     }
+ /****************************************************************************
+ */
     public void generate_atmosphere() {
         //Randomly generate atmosphere based on composition percentages,
         //initial temp of atmosphere, and initial density of atmosphere.
