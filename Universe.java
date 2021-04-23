@@ -433,7 +433,7 @@ public class Universe {
     //Setters
     
     /**
-    * The set_droplet method will take the inputted coordniate and will have the droplet at that position equal to the new droplet.
+    * The set_droplet method will take the inputted coordinate and will have the droplet at that position equal to the new droplet.
     * @param x, the coordinate on the x-axis
     * @param y, the coordinate on the y-axis
     * @param new_value, the new droplet
