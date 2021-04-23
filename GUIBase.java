@@ -76,6 +76,22 @@ public class GUIBase {
         frame.pack();
         frame.setVisible(true);
     }
+
+    public JTextField getTextField1() {
+        return textField1;
+    }
+
+    public void setTextField1(JTextField textField1) {
+        this.textField1 = textField1;
+    }
+
+    public JTextField getTextField2() {
+        return textField2;
+    }
+
+    public void setTextField2(JTextField textField2) {
+        this.textField2 = textField2;
+    }
 }  //start of main
 
 
