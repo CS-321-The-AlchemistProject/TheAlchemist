@@ -2,10 +2,19 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 public class ReactionDatabase {
+	/**
+	* The find method will return the reaction that contains the inputted reaction key
+	* @param reaction_key, the key to be used to search for reactions
+	*/
 	public boolean find(String reaction_key) { 
 		return reactions.containsKey(reaction_key); 
 	}
-
+	
+	/**
+	* The get_reaction method will take an inputted reaction key and return an array list
+	* of the reactions that contain that key.
+	* @param reaction_key, the reaction key that will be used to return the corresponding reactions
+	*/
 	public ArrayList<Reaction> get_reaction(String reaction_key) { 
 		return reactions.get(reaction_key); 
 	}
