@@ -180,7 +180,7 @@ public class Universe {
          //we use the same gravity for the y axis but we need to find it for x
             int SpreadRate = 3;
             long DispX = 1/2 * SpreadRate * Time;
-            int DisplacementX = (int) Dispx;
+            int DisplacementX = (int) DispX;
             boolean BelowEmptyLiquid = is_empty(current_x, current_y - 1); // variable that checks the below block 
             if(BelowEmptyLiquid == true){
                 universe[current_x][current_y].copy_into(universe[current_x][current_y - DisplacementY]);
