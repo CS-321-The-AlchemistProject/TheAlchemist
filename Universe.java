@@ -129,13 +129,22 @@ public class Universe {
     * it from being moved more than once per frame.
     */
     public void fall() {
+     //Just in case, all the DisplacementY are just replacing 1. So if we need to change it back start with that.
+        //we have gravity for acceleration
+        //Velocity = initial Velocity - acceleration * time
+        //Velocity = 0 - 10 *time
+        long Time = System.currentTimeMillis();
+        long Velocity = 10*Time;
+        long Disp = 1/2*Velocity*Time;
+        //convert to integer
+        int DisplacementY =(int) Disp;
        if (universe[current_x][current_y].get_current_state() == State.solid) {
             //Solid movement rules. Consult video and articles I sent over discord. 
             boolean BelowEmpty = is_empty(current_x, current_y - 1); // variable that checks the below block
             if(BelowEmpty == true){
                 //copies the current droplet into the new position
-                universe[current_x][current_y].copy_into(universe[current_x][current_y -1]);
-                universe[current_x][current_y - 1].set_has_moved(true); // marks that it has been move
+                universe[current_x][current_y].copy_into(universe[current_x][current_y - DisplacementY]);
+                universe[current_x][current_y - DisplacementY].set_has_moved(true); // marks that it has been move
                 set_droplet(current_x, current_y, null); //makes the current spot empty
             }
             else if (universe[current_x][current_y - 1].get_density() > universe[current_x][current_y].get_density()){
@@ -144,14 +153,14 @@ public class Universe {
                 boolean belowEmptyLeft = is_empty(current_x - 1, current_y - 1);
               if(belowEmptyLeft == true){
                   //moves the block left if it is empty and the one below is full
-                  universe[current_x][current_y].copy_into(universe[current_x - 1][current_y -1]);
-                  universe[current_x - 1][current_y - 1].set_has_moved(true);
+                  universe[current_x][current_y].copy_into(universe[current_x - 1][current_y - DisplacementY]);
+                  universe[current_x - 1][current_y - DisplacementY].set_has_moved(true);
                   set_droplet(current_x, current_y, null);
               }
               else if(belowEmptyRight == true){
                   // if the right side is empty the block will move there.
-                  universe[current_x][current_y].copy_into(universe[current_x + 1][current_y - 1]);
-                  universe[current_x][current_y - 1].set_has_moved(true);
+                  universe[current_x][current_y].copy_into(universe[current_x + 1][current_y - DisplacementY]);
+                  universe[current_x][current_y - DisplacementY].set_has_moved(true);
                   set_droplet(current_x, current_y, null);
               }
             else if (universe[current_x][current_y].get_density() > universe[current_x][current_y - 1].get_density()){
@@ -168,10 +177,14 @@ public class Universe {
             //Liquid movement rules. Consult video I sent over discord.
             //Liquids will check all the below and to the sides
             // I will need to add a random integer to prevent it from only moving left first
+         //we use the same gravity for the y axis but we need to find it for x
+            int SpreadRate = 3;
+            long DispX = 1/2 * SpreadRate * Time;
+            int DisplacementX = (int) Dispx;
             boolean BelowEmptyLiquid = is_empty(current_x, current_y - 1); // variable that checks the below block 
             if(BelowEmptyLiquid == true){
-                universe[current_x][current_y].copy_into(universe[current_x][current_y -1]);
-                universe[current_x][current_y - 1].set_has_moved(true); // marks that it has been move
+                universe[current_x][current_y].copy_into(universe[current_x][current_y - DisplacementY]);
+                universe[current_x][current_y - DisplacementY].set_has_moved(true); // marks that it has been move
                 set_droplet(current_x, current_y, null); //makes the current spot empty
             }
             else if (universe[current_x][current_y].get_density() < universe[current_x][current_y - 1].get_density()){
@@ -181,24 +194,40 @@ public class Universe {
                 boolean RightLiquid = is_empty(current_x + 1, current_y);
                 //above gets whether all the surrounding blocks are empty
                 if(BelowEmptyLeftL == true){
-                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y -1]);
+                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y - DisplacementY]);
                     set_droplet(current_x, current_y, null);
-                    universe[current_x - 1][current_y - 1].set_has_moved(true);
+                    universe[current_x - 1][current_y - DisplacementY].set_has_moved(true);
                 }
                 else if(BelowEmptyRightL ==true){
-                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y -1]);
-                    universe[current_x + 1][current_y - 1].set_has_moved(true);
+                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y - DisplacementY]);
+                    universe[current_x + 1][current_y - DisplacementY].set_has_moved(true);
                     set_droplet(current_x, current_y, null);
                 }
                 else if(LeftLiquid == true){
-                    universe[current_x][current_y].copy_into(universe[current_x - 1][current_y]);
-                    universe[current_x - 1][current_y].set_has_moved(true);
-                    set_droplet(current_x, current_y, null);
+                 for(int i =0; i< SpreadRate; i++){
+                   LeftLiquid = is_empty(current_x - 1, current_y);
+                   if(LeftLiquid == true){
+                     universe[current_x][current_y].copy_into(universe[current_x - 1][current_y]);
+                     universe[current_x - 1][current_y].set_has_moved(true);
+                     set_droplet(current_x, current_y, null);
+                   }
+                   else{
+                     break;
+                   }
+                  }
                 }
                 else if (RightLiquid == true){
-                    universe[current_x][current_y].copy_into(universe[current_x + 1][current_y]);
-                    universe[current_x + 1][current_y].set_has_moved(true);
-                    set_droplet(current_x, current_y, null);
+                    for(int i =0; i< SpreadRate; i++){
+                        RightLiquid = is_empty(current_x + 1, current_y);
+                        if(RightLiquid == true){
+                            universe[current_x][current_y].copy_into(universe[current_x + 1][current_y]);
+                            universe[current_x + 1][current_y].set_has_moved(true);
+                            set_droplet(current_x, current_y, null);
+                        }
+                        else{
+                            break;
+                        }
+                    }
                 }
             }
             else if (universe[current_x][current_y].get_density() > universe[current_x][current_y].get_density()){
