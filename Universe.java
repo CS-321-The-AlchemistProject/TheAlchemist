@@ -1,5 +1,5 @@
 import java.util.*;
-
+ 
 public class Universe {
     //Functional methods
     
