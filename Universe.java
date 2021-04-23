@@ -109,8 +109,8 @@ public class Universe {
     
     /**
     * The is_empty method will check if the inputted coordinates are empty.
-    * @param x is the x axis coordniate
-    * @param y is the y axis coordniate 
+    * @param x is the x axis coordinate
+    * @param y is the y axis coordinate 
     * @return true/false
     */
     public boolean is_empty(int x, int y) { return universe[x][y] == null; }
