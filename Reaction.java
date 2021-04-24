@@ -21,16 +21,21 @@ public class Reaction {
     public ArrayList<Integer> get_product_coefficients() { return product_coefficients; }
     
     /**
-     * The get_delta_enthalpy method will return the delta enthalpy
-     * @return is the delta enthalpy that were found
+     * The get_delta_enthalpy method will return the desired delta enthalpy
+     * @return is the delta enthalpy that was found
      */         
     public double get_delta_enthalpy() { return delta_enthalpy; }
     
     /**
-     * The get_delta_entropy method will return the delta enthalpy
-     * @return is the delta enthalpy that were found
+     * The get_delta_entropy method will return the desired delta entropy
+     * @return is the delta entropy that was found
      */        
     public double get_delta_entropy() { return delta_entropy; }
+    
+    /**
+     * The get_reaction_key method will return the desired reaction key
+     * @return is the reaction key that was found
+     */      
     public String get_reaction_key() { return reaction_key; }
 
     public void set_products(ArrayList<Chemical> new_value) { products = new_value; }
