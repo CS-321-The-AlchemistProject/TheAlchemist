@@ -1,5 +1,5 @@
 
-package GUIMain;
+package AlchMain;
 
 import javax.swing.JFrame;
 

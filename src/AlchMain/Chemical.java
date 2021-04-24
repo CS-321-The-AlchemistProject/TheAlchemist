@@ -1,3 +1,5 @@
+package AlchMain;
+
 public class Chemical {
     
     /**
