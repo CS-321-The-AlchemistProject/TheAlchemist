@@ -38,6 +38,12 @@ public class Reaction {
      */      
     public String get_reaction_key() { return reaction_key; }
 
+    //Setters
+    
+    /**
+     * The set_products method will set the products to the new value inputted
+     * @return is the delta entropy that was found
+     */  
     public void set_products(ArrayList<Chemical> new_value) { products = new_value; }
     public void set_reactants(ArrayList<Chemical> new_value) { reactants = new_value; }
     public void set_product_coefficients(ArrayList<Integer> new_value) { product_coefficients = new_value; }
