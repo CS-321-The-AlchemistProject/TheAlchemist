@@ -30,7 +30,7 @@ public class ReactionDatabase {
 				ArrayList<Integer> product_coefficients = new ArrayList<Integer>();
 				String line = s.nextLine();
 				String[] tempList = line.split(" ");
-				String key = tempList[0];
+				String key = "";
 				String[] reactString = tempList[1].split("\\+");
 				String[] prodString = tempList[2].split("\\+");
 				int i = 3;
@@ -48,6 +48,7 @@ public class ReactionDatabase {
 					product_coefficients.add(coeff2);
 
 				for(int j = 0 ; j < reactString.length; j++) {
+					key += reactString[j];
 					Chemical c = cdb.get_chemical(cdb.search(cdb.convert_formula_to_name(reactString[j])));				
 					reactants.add(c);		
 				}
