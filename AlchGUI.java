@@ -1,29 +1,37 @@
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import javax.swing.*;
+import javax.swing.JFrame;
 
-public class AlchGUI extends JPanel{
-    ViewportPanel RenderWindow;
-    private JButton button1;
 
-    AlchGUI(){
+public class AlchGUI extends JFrame {
+    Viewport viewport;
 
-        RenderWindow = new ViewportPanel();
-
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(RenderWindow);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+    public AlchGUI() {
+        initComponents();
+        AlchGUI.add( new viewport());
     }
+    @SuppressWarnings("unchecked")
 
+    private void initComponents() {
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        pack();
+    }
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AlchGUI().setVisible(true);
+            }
+        });
+    }
 }
