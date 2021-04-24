@@ -1,4 +1,3 @@
-
 package AlchMain;
 
 import javax.swing.JFrame;

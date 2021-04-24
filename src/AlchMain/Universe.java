@@ -88,7 +88,7 @@ public class Universe {
         else
             right_temp = get_neighbor(0, 1).get_temperature();
 
-        return (universe[current_x][current_y].get_chem_type().get_thermal_diff() / inv_dx_squared)
+        return (universe[current_x][current_y].get_chem_type().get_thermal_diff_solid() / inv_dx_squared)
                 * (top_temp + bottom_temp + left_temp + right_temp
                 - 4 * universe[current_x][current_y].get_temperature()) * dt;
     }
@@ -323,8 +323,8 @@ public class Universe {
                         set_droplet(current_x, current_y, null);
                         universe[current_x - 1][current_y - 1].set_has_moved(true);
                         break;
-                default:
-                     break;
+                //default:
+                     //break;
                      
                     }
             }
