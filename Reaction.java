@@ -1,10 +1,35 @@
 import java.util.ArrayList;
 
 public class Reaction {
+    
+    /**
+     * The get_products method will traverse the array list and return the products
+     * @return is the products that were found
+     */    
     public ArrayList<Chemical> get_products() { return products; }
+    
+    /**
+     * The get_reactants method will traverse the array list and return the chemicals
+     * @return is the reactants that were found
+     */     
     public ArrayList<Chemical> get_reactants() { return reactants; }
+    
+    /**
+     * The get_product_coefficients method will traverse the array list and return the product coefficients 
+     * @return is the product coefficients that were found
+     */         
     public ArrayList<Integer> get_product_coefficients() { return product_coefficients; }
+    
+    /**
+     * The get_delta_enthalpy method will return the delta enthalpy
+     * @return is the delta enthalpy that were found
+     */         
     public double get_delta_enthalpy() { return delta_enthalpy; }
+    
+    /**
+     * The get_delta_entropy method will return the delta enthalpy
+     * @return is the delta enthalpy that were found
+     */        
     public double get_delta_entropy() { return delta_entropy; }
     public String get_reaction_key() { return reaction_key; }
 
