@@ -674,7 +674,7 @@ public class Universe {
         inv_dx_squared = 1 / (dx * dx);
     }
 
-    //Variables
+    //Declaration of variables
     private Droplet[][] universe;
     private int cursor_x;
     private int cursor_y;

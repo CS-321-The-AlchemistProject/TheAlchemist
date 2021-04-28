@@ -11,14 +11,26 @@ import java.util.Iterator;
 
 public class ReactionDatabase {
 
+	/**
+	* The constructor will create a hashmap of the reactions
+	*/
 	public ReactionDatabase() {
 		reactions = new HashMap<String, ArrayList<Reaction>>();
 	}
 
+	/**
+	* The find method will take in an inputted key and return the reactions that is associated with it.
+	* @param reaction_key, a string that will represent the reaction key
+	* @return the reaction that is represented by the inputted key
+	*/
 	public boolean find(String reaction_key) { 
 		return reactions.containsKey(reaction_key); 
 	}
 
+	/**
+	* The initialize_db method will read the file containing all the reactions and will create array lists to hold the information.
+	* It will also set the variables equal to the corresponding information from the file.
+	*/
 	public void initialize_db() {
 		try {
 			ChemicalDatabase cdb = new ChemicalDatabase();
@@ -83,15 +95,33 @@ the formatting in the reaction list is in the style of how it'll be formatted in
 data entry is separated by one white space
 each line is one reaction/chemical
 */
+	/**
+	* The get_reaction method will return back an arraylist of the reactions with the inputted reaction key.
+	* @param reaction_key, a string that will represent the reaction key
+	* @return, the reactions that have the inputted reaction key
+	*/
 	public ArrayList<Reaction> get_reaction(String reaction_key) { 
 		return reactions.get(reaction_key); 
 	}
 
+	/**
+         * The set_reaction method will check if the inputted reaction key has been
+         * deleted and place a new reaction value into it
+         * @param reaction_key is the reaction key that will be used to find the 
+         * reaction to be modified
+         * @param new_value is the new reaction value
+         */
 	public void set_reaction(String reaction_key, ArrayList<Reaction> new_value) { 
 		if(delete_reaction(reaction_key)) 
 			reactions.put(reaction_key, new_value);	
 	}
 
+	/**
+         * The add_reaction method will take an inputted reaction key and new value
+         * and create a new reaction with the values
+         * @param reaction_key is the reaction key to be used
+         * @param new_value is the reaction value to be used
+         */	
 	public void add_reaction(String reaction_key, Reaction new_value) { 
 		if(reactions.get(reaction_key) == null) {		
 			reactions.put(reaction_key, new ArrayList<Reaction>());
@@ -99,6 +129,13 @@ each line is one reaction/chemical
 		reactions.get(reaction_key).add(new_value);
 	}
 
+	/**
+         * The delete_reaction method will take an inputted reaction key and remove
+         * it from the reaction list
+         * @param reaction_key is the reaction key that will be used to find the 
+         * reaction to be deleted
+         * @return is the boolean result for the condition
+         */
 	public boolean delete_reaction(String reaction_key) {
 		if(reactions.get(reaction_key) == null) 		
 			return false;
@@ -106,6 +143,10 @@ each line is one reaction/chemical
 		return true;
 	}
 
+	/**
+	* The print_db method will print out all the reactions and all the information that pertains to it.
+
+	*/
 	public void print_db() {
 		for(Map.Entry<String, ArrayList<Reaction>> entry : reactions.entrySet()) {		
 			String key = entry.getKey();
