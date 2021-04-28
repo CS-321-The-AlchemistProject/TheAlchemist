@@ -1,29 +1,52 @@
 package AlchMain;
 
 public class Droplet {
+
+    public Droplet(Chemical chem, double temp, int new_compressed) {
+        this.chem_typ = chem;
+        this.temperature = temp;
+        this.has_moved = False;
+        this.has_reacted = False;
+        this.update_state();
+        this.update_state_dependancies();
+        this.num_compressed = new_compressed;
+
+    }
     
     /**
     * The update_state method will compare the temperature to the melting points and boiling points to determine what state the chemical should be in.
     */
     public void update_state() {    //Could probably combine w/ update_density()
         if (temperature < chem_type.get_melt_point())
-            current_state = State.solid;
+            this.current_state = State.solid;
         if (temperature < chem_type.get_boil_point() && temperature >= chem_type.get_melt_point())
-            current_state = State.liquid;
+            this.current_state = State.liquid;
         if (temperature >= chem_type.get_boil_point())
-            current_state = State.gas;
+            this.current_state = State.gas;
     }
     
     /**
     * The update_density method will check the chemical's state and give it the corresponding density for it.
     */
-    public void update_density() {
-        if (current_state == State.solid)
-            density = chem_type.get_sol_density();
-        if (current_state == State.liquid)
-            density = chem_type.get_liq_density();
-        if (current_state == State.gas)
-            density = chem_type.get_gas_density();
+    public void update_state_dependancies() {
+        if (current_state == State.solid) {
+            this.density = chem_type.get_sol_density();
+            this.thermal_diffusivity = chem_type.get_thermal_diff_solid();
+            this.thermal_conductivity = chem_type.get_thermal_cond_solid();
+            this.specific_heat = chem_type.get_sp_heat_solid();
+        }
+        else if (current_state == State.liquid) {
+            this.density = chem_type.get_liq_density();
+            this.thermal_diffusivity = chem_type.get_thermal_diff_liquid();
+            this.thermal_conductivity = chem_type.get_thermal_cond_liquid();
+            this.specific_heat = chem_type.get_sp_heat_liquid();
+        }
+        else if (current_state == State.gas) {
+            this.density = chem_type.get_gas_density();
+            this.thermal_diffusivity = chem_type.get_thermal_diff_gas();
+            this.thermal_conductivity = chem_type.get_thermal_cond_gas();
+            this.specific_heat = chem_type.get_sp_heat_gas();
+        }
     }
     
     /**
@@ -66,6 +89,12 @@ public class Droplet {
     * @return density, the current density of the droplet
     */
     public double get_density() { return density; }
+
+    public double get_specific_heat() { return specific_heat; }
+
+    public double get_thermal_diffusivity() { return thermal_diffusivity; }
+
+    public double get_thermal_conductivity() { return thermal_conductivity; }
     
     /**
     * The get_current_state method will return the state(solid, liquid, gas) of the droplet
@@ -115,6 +144,12 @@ public class Droplet {
     * @param new_value, the new value of the density
     */
     public void set_density(double new_value) { density = new_value; }
+
+    public void set_specific_heat(double new_value) { specific_heat = new_value; }
+
+    public void set_thermal_diffusivity(double new_value) { thermal_diffusivity = new_value; }
+
+    public void set_thermal_conductivity(double new_value) { thermal_conductivity = new_value; }
     
     /**
     * The set_current_state method will change the value of the current_state variable.
@@ -149,6 +184,9 @@ public class Droplet {
     private Chemical chem_type;
     private double temperature;
     private double density;
+    private double thermal_diffusivity;
+    private double thermal_conductivity;
+    private double specific_heat;
     private State current_state;
     private double dTemp;
     private boolean has_moved;

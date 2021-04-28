@@ -1,6 +1,7 @@
 package AlchMain;
 
 import java.util.*;
+import java.lang.Math;
  
 public class Universe {
     //Functional methods
@@ -48,7 +49,7 @@ public class Universe {
         for (current_x = 0; current_x < screen_width; current_x++) {    //Updates state & density of droplets
             for (current_y = 0; current_y < screen_height; current_y++) {
                 universe[current_x][current_y].update_state();
-                universe[current_x][current_y].update_density();
+                universe[current_x][current_y].update_state_dependancies();
             }
         }
         for (current_x = 0; current_x < screen_width; current_x++) {    //Updates position of all droplets
@@ -95,22 +96,152 @@ public class Universe {
  
  /***************************************************************
  */
-    public void react() {
-        //Check if any neighbors react with current particle from reaction database.
+    public void react(int x, int y) {
+        Droplet above = universe[x][y+1];
+        Droplet below = universe[x][y-1];
+        Droplet left = universe[x-1][y];
+        Droplet right = universe[x+1][y];
+        Droplet center = universe[x][y];
 
-        //If no, do nothing.
+        double above_temp = above.get_temperature() + center.get_temperature();
+        double below_temp = below.get_temperature() + center.get_temperature();
+        double left_temp = left.get_temperature() + center.get_temperature();
+        double right_temp = right.get_temperature() + center.get_temperature();
+        double center_temp = center.get_temperature();
 
-        //If yes, add each possible reaction to a list.
+        String above_reactants = center.get_chem_type().get_formula()
+                + above.get_chem_type().get_formula();
+        String below_reactants = center.get_chem_type().get_formula()
+                + below.get_chem_type().get_formula();
+        String left_reactants = center.get_chem_type().get_formula()
+                + left.get_chem_type().get_formula();
+        String right_reactants = center.get_chem_type().get_formula()
+                + right.get_chem_type().get_formula();
 
-        //Choose reaction randomly based off of probability of it occurring (determined from
-        //energy released (the more energy released the higher the chance that reaction
-        //is selected)).
+        ArrayList<Reaction> above_reactions = get_reaction(above_reactants);
+        ArrayList<Reaction> below_reactions = get_reaction(below_reactants);
+        ArrayList<Reaction> left_reactions = get_reaction(left_reactants);
+        ArrayList<Reaction> right_reactions = get_reaction(right_reactants);
 
-        //Change chem_type of the droplets that reacted to the new type.
+        double temp_R_ln_k = 0.0;
+        double max_R_ln_k_above = -1.0;
+        int index_of_max_above = 0;
+        for (int n; n < above_reactions.size(); n++) {
+            temp_R_ln_k = above_reactions.get(n).get_delta_entropy()
+                    - above_reactions.get(n).get_delta_enthalpy() / above_temp;
+            if (temp_R_ln_k > max_R_ln_k_above) {
+                max_R_ln_k_above = temp_R_ln_k;
+                index_of_max_above = n;
+            }
+        }
+        double max_R_ln_k_below = -1.0;
+        int index_of_max_below = 0;
+        for (int n; n < below_reactions.size(); n++) {
+            temp_R_ln_k = below_reactions.get(n).get_delta_entropy()
+                    - below_reactions.get(n).get_delta_enthalpy() / below_temp;
+            if (temp_R_ln_k > max_R_ln_k_below) {
+                max_R_ln_k_below = temp_R_ln_k;
+                index_of_max_below = n;
+            }
+        }
+        double max_R_ln_k_left = -1.0;
+        int index_of_max_left = 0;
+        for (int n; n < left_reactions.size(); n++) {
+            temp_R_ln_k = left_reactions.get(n).get_delta_entropy()
+                    - left_reactions.get(n).get_delta_enthalpy() / left_temp;
+            if (temp_R_ln_k > max_R_ln_k_left) {
+                max_R_ln_k_left = temp_R_ln_k;
+                index_of_max_left = n;
+            }
+        }
+        float max_R_ln_k_right = -1.0;
+        int index_of_max_right = 0;
+        for (int n; n < right_reactions.size(); n++) {
+            temp_R_ln_k = right_reactions.get(n).get_delta_entropy()
+                    - right_reactions.get(n).get_delta_enthalpy() / right_temp;
+            if (temp_R_ln_k > max_R_ln_k_right) {
+                max_R_ln_k_right = temp_R_ln_k;
+                index_of_max_right = n;
+            }
+        }
 
-        //Update temperature of both new droplets based of the energy released/absorbed.
+        ArrayList<float> = max_R_ln_k_s;
+        ArrayList<Reaction> = possible_reactions;
+        max_R_ln_k_s.add(max_R_ln_k_above);
+        possible_reactions.add(above_reactants.get(index_of_max_above);
+        max_R_ln_k_s.add(max_R_ln_k_below);
+        possible_reactions.add(below_reactants.get(index_of_max_below);
+        max_R_ln_k_s.add(max_R_ln_k_left);
+        possible_reactions.add(left_reactants.get(index_of_max_left);
+        max_R_ln_k_s.add(max_R_ln_k_right);
+        possible_reactions.add(right_reactants.get(index_of_max_right);
+        Reaction chosen_reaction;
+        double max_R_ln_k = -1.0;
+        int chesen_identifier = -1;
+        for (int n = 0; n < 4; n++) {
+            if (max_R_ln_k_s.get(n) > max_R_ln_k) {
+                max_R_ln_k = max_R_ln_k_s.get(n);
+                chosen_reaction = possible_reactions.get(n);
+                chosen_identifier = n;
+            }
+        }
 
-        //Update num_compressed of both droplets based on balanced reaction equation.
+        if (max_R_ln_k <= 0) {
+            return;
+        }
+        else {
+            Chemical product1 = chosen_reaction.get_products.get(0);
+            if (chosen_reaction.get_products.size() > 1) {
+                Chemical product2 = chosen_reaction.get_products.get(1);
+                int num_compressed_1 = chosen_reaction.get_product_coefficients().get(0);
+                int num_compressed_2 = chosen_reaction.get_product_coefficients().get(1);
+            }
+            else {
+                Chemical product2 = chosen_reaction.get_products.get(0);
+                int num_compressed_1 = Math.floor(chosen_reaction.get_product_coefficients().get(0) / 2);
+                int num_compressed_2 = chosen_reaction.get_product_coefficients().get(0) - num_compressed_1;
+            }
+            if (chosen_identifier == 0) {
+                universe[x][y] = new Droplet(product1, center_temp, num_compressed_1);
+                universe[x][y+1] = new Droplet(product2, above_temp, num_compressed_2);
+                double new_center_temp = center_temp + 0.5 * chosen_reaction.get_delta_enthaply()
+                        / universe[x][y].get_specific_heat();
+                double new_above_temp = above_temp + 0.5 * chosen_reaction.get_delta_enthaply()
+                        / universe[x][y+1].get_specific_heat();
+                universe[x][y].set_temperature(new_center_temp);
+                universe[x][y+1].set_temperature(new_above_temp);
+            }
+            else if (chosen_identifier == 1) {
+                universe[x][y] = new Droplet(product1, center_temp, num_compressed_1);
+                universe[x][y-1] = new Droplet(product2, below_temp, num_compressed_2);
+                double new_center_temp = center_temp + 0.5 * chosen_reaction.get_delta_enthaply()
+                        / universe[x][y].get_specific_heat();
+                double new_below_temp = below_temp + 0.5 * chosen_reaction.get_delta_enthaply()
+                        / universe[x][y-1].get_specific_heat();
+                universe[x][y].set_temperature(new_center_temp);
+                universe[x][y-1].set_temperature(new_below_temp);
+            }
+            else if (chosen_identifier == 2) {
+                universe[x][y] = new Droplet(product1, center_temp, num_compressed_1);
+                universe[x-1][y] = new Droplet(product2, left_temp, num_compressed_2);
+                double new_center_temp = center_temp + 0.5 * chosen_reaction.get_delta_enthaply()
+                        / universe[x][y].get_specific_heat();
+                double new_left_temp = left_temp + 0.5 * chosen_reaction.get_delta_enthaply()
+                        / universe[x-1][y].get_specific_heat();
+                universe[x][y].set_temperature(new_center_temp);
+                universe[x-1][y].set_temperature(new_left_temp);
+            }
+            else if (chosen_identifier == 3) {
+                universe[x][y] = new Droplet(product1, center_temp, num_compressed_1);
+                universe[x+1][y] = new Droplet(product2, right_temp, num_compressed_2);
+                double new_center_temp = center_temp + 0.5 * chosen_reaction.get_delta_enthaply()
+                        / universe[x][y].get_specific_heat();
+                double new_right_temp = right_temp + 0.5 * chosen_reaction.get_delta_enthaply()
+                        / universe[x+1][y].get_specific_heat();
+                universe[x][y].set_temperature(new_center_temp);
+                universe[x+1][y].set_temperature(new_right_temp);
+            }
+        }
     }
     
     /**
@@ -129,8 +260,7 @@ public class Universe {
  * @param y_2, the y coordinate of the second droplet
  */
     public void swap(int x_1, int y_1, int x_2, int y_2) {
-        Droplet temp = null;    //Idk if this works or not
-        assert false;
+        Droplet temp = new Droplet(H20, 100);    //Idk if this works or not
         universe[x_1][y_1].copy_into(temp);
         universe[x_2][y_2].copy_into(universe[x_1][y_1]);
         temp.copy_into(universe[x_2][y_2]);
@@ -253,7 +383,7 @@ public class Universe {
             }
             //if it does not meet any of these conditions it will stay still
         }
-        else {
+        else if (universe[current_x][current_y].get_current_state() == State.gas) {
             //Gas movement rules. Moves in random direction. If we feelin spicy, we could make them
             //move more if their temperature is higher.
             int randomInteger = (int)Math.floor(Math.random()*(8-1+1)+1);
