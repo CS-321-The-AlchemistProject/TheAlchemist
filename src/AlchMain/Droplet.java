@@ -27,7 +27,7 @@ public class Droplet {
     }
     
     /**
-    * The update_temp will
+    * The update_temp will add the change of temperature to the temperature variable.
     */
     public void update_temp() {     //^^^
         temperature = temperature + dTemp;
@@ -74,25 +74,26 @@ public class Droplet {
     public State get_current_state() { return current_state; }
     
     /**
-    * The get_dTemp will return 
-    * @return dTemp
+    * The get_dTemp will return the change of temperature.
+    * @return dTemp, the change in value
     */
     public double get_dTemp() { return dTemp; }
     
     /**
-    * The get_has_moved method will return true or false to whether the droplet has moved
+    * The get_has_moved method will return true or false to whether the droplet has moved.
     * @return has_moved, true/false
     */
     public boolean get_has_moved() { return has_moved; }
     
     /**
-    * The get_has_reacted method will return true/false to whether the droplet has reacted
+    * The get_has_reacted method will return true/false to whether the droplet has reacted.
     * @return has_reacted, true/false
     */
     public boolean get_has_reacted() { return has_reacted; }
     
     /**
-    * The get_num_compressed method will 
+    * The get_num_compressed method will return the value of the number of blocks compressed into one block.
+    * @return num_compressed, the number of blocks in one block
     */
     public int get_num_compressed() { return num_compressed; }
 
