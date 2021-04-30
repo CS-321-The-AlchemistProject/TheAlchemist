@@ -1,4 +1,4 @@
-package AlchMain;
+package com.AlchMain;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,12 +8,12 @@ public class UniverseDisplay extends Canvas implements MouseListener, ActionList
     public String brush_chem = "H2O";
     public double brush_temp = 273.15;
 
-    public static JLabel label1 = new JLabel("nothing entered");
-    public static JButton button1 = new JButton("submit1");
-    public static JTextField text1 = new JTextField(16);
-    public static JLabel label2 = new JLabel("nothing entered");
-    public static JButton button2 = new JButton("submit2");
-    public static  JTextField text2 = new JTextField(16);
+    public final static JLabel label1 = new JLabel("nothing entered");
+    public final static JButton button1 = new JButton("submit1");
+    public final static JTextField text1 = new JTextField(16);
+    public final static JLabel label2 = new JLabel("nothing entered");
+    public final static JButton button2 = new JButton("submit2");
+    public final static  JTextField text2 = new JTextField(16);
 
     public UniverseDisplay(int width, int height, String title, AlchGUI alchGui) {
         JFrame frame = new JFrame(title);

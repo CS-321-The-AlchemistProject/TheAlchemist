@@ -1,4 +1,4 @@
-package AlchMain;
+package com.AlchMain;
 
 import java.util.ArrayList;
 import java.io.File;
