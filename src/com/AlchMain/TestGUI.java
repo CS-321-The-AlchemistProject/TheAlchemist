@@ -1,4 +1,4 @@
-package com.AlchMain;
+package AlchMain;
 
 import javax.swing.JFrame;
 import java.awt.*;

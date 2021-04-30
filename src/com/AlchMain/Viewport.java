@@ -1,4 +1,4 @@
-package com.AlchMain;
+package AlchMain;
 
 import javax.swing.JPanel;
 import java.awt.Graphics;
