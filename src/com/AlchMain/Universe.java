@@ -1,4 +1,4 @@
-package AlchMain;
+package com.AlchMain;
 
 import java.util.*;
 import java.lang.Math;
@@ -948,18 +948,18 @@ public class Universe {
 
     //Declaration of variables
     private Random random;
-    private Droplet[][] universe;
-    private ReactionDatabase reaction_database;
-    private ChemicalDatabase chemical_database;
+    private final Droplet[][] universe;
+    private final ReactionDatabase reaction_database;
+    private final ChemicalDatabase chemical_database;
     private int cursor_x;
     private int cursor_y;
     private int current_x;
     private int current_y;
-    private int screen_width; //Temporary variables
-    private int screen_height; //Temporary variables
-    private static double g;
-    private static double pressure_constant;
-    private static double dt;
-    private static double dx;
-    public static double inv_dx_squared;
+    private final int screen_width; //Temporary variables
+    private final int screen_height; //Temporary variables
+    private double g;
+    private double pressure_constant;
+    private double dt;
+    private double dx;
+    public  double inv_dx_squared;
 }

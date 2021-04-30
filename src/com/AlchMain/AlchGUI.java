@@ -1,4 +1,4 @@
-package AlchMain;
+package com.AlchMain;
 
 import javax.swing.JFrame;
 import java.awt.*;
@@ -58,7 +58,7 @@ public class AlchGUI extends Canvas implements Runnable, MouseListener, MouseMot
         String[] split_color = color_string.split(delims);
         int[] color_values = new int[3];
         for (int n = 0; n < 3; n += 1) {
-            if (split_color[n] != "") {
+            if (!(split_color[n].equals(""))) { //changed to incorporate .equals
                 color_values[n] = Integer.parseInt(split_color[n]);
             }
         }
@@ -79,7 +79,8 @@ public class AlchGUI extends Canvas implements Runnable, MouseListener, MouseMot
             e.printStackTrace();
         }
     }
-
+    
+    @Override
     public void run() {
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;

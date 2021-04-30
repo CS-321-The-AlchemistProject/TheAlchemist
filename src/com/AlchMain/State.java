@@ -1,4 +1,4 @@
-package AlchMain;
+package com.AlchMain;
 
 public enum State { //enumeration
     solid,
