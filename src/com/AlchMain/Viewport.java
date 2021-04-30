@@ -6,11 +6,11 @@ import java.awt.Graphics;
 public class Viewport extends JPanel {
    
     public Viewport(){
-        this.setBounds(0,0, 100, 100);
+        this.setBounds(0,0, 200, 200);
     }
     
 
     protected void painComponent(Graphics g){
-        g.fillRect(0, 0, 50, 50);
+        g.fillRect(0, 0, 100, 100);
     }
 }

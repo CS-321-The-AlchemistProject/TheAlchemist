@@ -3,12 +3,12 @@ package AlchMain;
 public class Droplet {
 
     public Droplet(Chemical chem, double temp, int new_compressed) {
-        this.chem_typ = chem;
+        this.chem_type = chem;
         this.temperature = temp;
-        this.has_moved = False;
-        this.has_reacted = False;
+        this.has_moved = false;
+        this.has_reacted = false;
         this.update_state();
-        this.update_state_dependancies();
+        this.update_state_dependencies();
         this.num_compressed = new_compressed;
 
     }
@@ -28,7 +28,7 @@ public class Droplet {
     /**
     * The update_density method will check the chemical's state and give it the corresponding density for it.
     */
-    public void update_state_dependancies() {
+    public void update_state_dependencies() {
         if (current_state == State.solid) {
             this.density = chem_type.get_sol_density();
             this.thermal_diffusivity = chem_type.get_thermal_diff_solid();
@@ -64,11 +64,28 @@ public class Droplet {
         droplet.set_chem_type(chem_type);
         droplet.set_temperature(temperature);
         droplet.set_density(density);
+        droplet.set_thermal_diffusivity(thermal_diffusivity);
+        droplet.set_thermal_conductivity(thermal_conductivity);
+        droplet.set_specific_heat(specific_heat);
         droplet.set_current_state(current_state);
         droplet.set_dTemp(dTemp);
         droplet.set_has_moved(has_moved);
         droplet.set_has_reacted(has_reacted);
         droplet.set_num_compressed(num_compressed);
+    }
+
+    public void copy_from(Droplet other) {
+        this.chem_type = other.get_chem_type();
+        this.temperature = other.get_temperature();
+        this.density = other.get_density();
+        this.thermal_diffusivity = other.get_thermal_diffusivity();
+        this.thermal_conductivity = other.get_thermal_conductivity();
+        this.specific_heat = other.get_specific_heat();
+        this.current_state = other.get_current_state();
+        this.dTemp = other.get_dTemp();
+        this.has_moved = other.get_has_moved();
+        this.has_reacted = other.get_has_reacted();
+        this.num_compressed = other.get_num_compressed();
     }
 
     //getters

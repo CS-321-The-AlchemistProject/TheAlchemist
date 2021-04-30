@@ -1,7 +1,11 @@
 package AlchMain;
 
 public class Chemical {
-    
+
+    public Chemical() {
+
+    }
+
     /**
     * The get_name method will return the name of the chemical.
     * @return chem_name, the name of the chemical

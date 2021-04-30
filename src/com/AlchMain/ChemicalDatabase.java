@@ -22,11 +22,11 @@ public class ChemicalDatabase {
 	*/
 	public void initialize_db() {
 		try{
-			File f = new File("ChemicalList.txt");
+			File f = new File("ChemicalList4.txt");
 			Scanner s = new Scanner(f);
 			while(s.hasNextLine()) {
 				String line = s.nextLine();
-				String[] tempList = line.split(" ");	
+				String[] tempList = line.split("[ ]+");
 				Chemical entry = new Chemical();
 				int i = 0;
 				entry.set_formula(tempList[i++]);
@@ -63,8 +63,10 @@ public class ChemicalDatabase {
 			}
 		} catch (FileNotFoundException ex) {
 			System.out.println("not found");
+			ex.printStackTrace();
 		}
-		sort();
+		//sort();
+		//print_list();
 	}
 
 /*
@@ -126,15 +128,18 @@ formula common_name CAS_number melting_point boiling_point specific_heat_solid t
 	* @return chemical/ -1, it will return the index of the chemical or -1 if it is not found
 	*/
 	public int search(String chem_key) {
+		if (chem_key == null) {
+			return -1;
+		}
 		int low = 0;
 		int high = chemical_list.size() - 1;
 		int mid;
 		while (low <= high) {
 		    mid = (low + high) / 2;
 
-		    if (chemical_list.get(mid).get_name().compareTo(chem_key) < 0) {
+		    if (chemical_list.get(mid).get_chem_key().compareTo(chem_key) < 0) {
 			low = mid + 1;
-		    } else if (chemical_list.get(mid).get_name().compareTo(chem_key) > 0) {
+		    } else if (chemical_list.get(mid).get_chem_key().compareTo(chem_key) > 0) {
 			high = mid - 1;
 		    } else {
 			return mid;

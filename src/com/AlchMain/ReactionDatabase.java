@@ -27,6 +27,10 @@ public class ReactionDatabase {
 		return reactions.containsKey(reaction_key); 
 	}
 
+	public Reaction get_throwaway_reaction() {
+		return throw_away_reaction;
+	}
+
 	/**
 	* The initialize_db method will read the file containing all the reactions and will create array lists to hold the information.
 	* It will also set the variables equal to the corresponding information from the file.
@@ -35,7 +39,7 @@ public class ReactionDatabase {
 		try {
 			ChemicalDatabase cdb = new ChemicalDatabase();
 			cdb.initialize_db();
-			File f = new File("ReactionList.txt");
+			File f = new File("ReactionList4.txt");
 			Scanner s = new Scanner(f);
 			while(s.hasNextLine()) {
 				Reaction entry = new Reaction();
@@ -43,32 +47,68 @@ public class ReactionDatabase {
 				ArrayList<Chemical> products = new ArrayList<Chemical>();
 				ArrayList<Integer> product_coefficients = new ArrayList<Integer>();
 				String line = s.nextLine();
-				String[] tempList = line.split(" ");
+//				System.out.println(line);
+				String[] tempList = line.split("[ ]+");
+//				for (int n = 0; n < tempList.length; n++) {
+//					System.out.println(tempList[n]);
+//				}
 				String key = "";
-				String[] reactString = tempList[1].split("\\+");
-				String[] prodString = tempList[2].split("\\+");
+				String[] reactString = tempList[1].split("[\\+]+");
+				String[] prodString = tempList[2].split("[\\+]+");
+//				for (int n = 0; n < reactString.length; n++) {
+//					System.out.println(reactString[n]);
+//				}
+//				for (int n = 0; n < prodString.length; n++) {
+//					System.out.println(prodString[n]);
+//				}
 				int i = 3;
-				int coeff1 = -1;
-				int coeff2 = -1;
-				if(tempList[i].charAt(2) == ',') {
-					coeff1 = Character.getNumericValue(tempList[i++].charAt(1));
-					coeff2 = Character.getNumericValue(tempList[i++].charAt(0));
+//				int coeff1 = -1;
+//				int coeff2 = -1;
+//				if(tempList[i].charAt(2) == ',') {
+//					coeff1 = Character.getNumericValue(tempList[i++].charAt(1));
+//					coeff2 = Character.getNumericValue(tempList[i++].charAt(0));
+//				}
+//				else
+//					coeff1 = Character.getNumericValue(tempList[i++].charAt(1));
+//				if(coeff1 != -1)
+//					product_coefficients.add(coeff1);
+//				if(coeff2 != -1)
+//					product_coefficients.add(coeff2);
+				String[] coeffs_list = tempList[3].split("[\\]\\[,]+");
+				System.out.println(tempList[3]);
+				String[] coeffs_list2 = new String[coeffs_list.length-1];
+				for (int n = 1; n < coeffs_list.length; n++) {
+					coeffs_list2[n-1] = coeffs_list[n];
+//					System.out.println(coeffs_list2[n-1]);
 				}
-				else
-					coeff1 = Character.getNumericValue(tempList[i++].charAt(1));
-				if(coeff1 != -1)
-					product_coefficients.add(coeff1);
-				if(coeff2 != -1)
-					product_coefficients.add(coeff2);
+				for (int n = 0; n < coeffs_list2.length; n++) {
+					product_coefficients.add(Integer.parseInt(coeffs_list2[n]));
+				}
 
+				boolean null_chem = false;
 				for(int j = 0 ; j < reactString.length; j++) {
 					key += reactString[j];
-					Chemical c = cdb.get_chemical(cdb.search(cdb.convert_formula_to_name(reactString[j])));				
+					Chemical c = null;
+					if (cdb.search(reactString[j]) != -1) {
+						c = cdb.get_chemical(cdb.search(reactString[j]));
+					}
+					else {
+						null_chem = true;
+					}
 					reactants.add(c);		
 				}
 				for(int j = 0 ; j < prodString.length; j++) {
-					Chemical c = cdb.get_chemical(cdb.search(cdb.convert_formula_to_name(prodString[j])));
+					Chemical c = null;
+					if (cdb.search(prodString[j]) != -1) {
+						c = cdb.get_chemical(cdb.search(prodString[j]));
+					}
+					else {
+						null_chem = true;
+					}
 					products.add(c);	
+				}
+				if (null_chem) {
+					continue;
 				}
 			
 				entry.set_reaction_key(key);
@@ -76,9 +116,12 @@ public class ReactionDatabase {
 				entry.set_products(products);
 				entry.set_product_coefficients(product_coefficients);
 
-				entry.set_delta_enthalpy(Double.parseDouble(tempList[i++]));
-				entry.set_delta_entropy(Double.parseDouble(tempList[i++]));
+				entry.set_delta_enthalpy(Double.parseDouble(tempList[4]));
+				entry.set_delta_entropy(Double.parseDouble(tempList[5]));
 
+				if (!(throw_away_reaction == null)) {
+					throw_away_reaction = entry;
+				}
 				if(!reactions.containsKey(key)) {
 					reactions.put(key, new ArrayList<Reaction>());
 				}
@@ -177,4 +220,5 @@ each line is one reaction/chemical
 	}		
 
 	private HashMap<String, ArrayList<Reaction>> reactions;
+	private Reaction throw_away_reaction;
 }

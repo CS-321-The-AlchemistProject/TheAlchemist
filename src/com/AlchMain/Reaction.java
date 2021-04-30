@@ -3,7 +3,20 @@ package AlchMain;
 import java.util.ArrayList;
 
 public class Reaction {
-    
+
+    public Reaction() {
+
+    }
+
+    public void copy_from(Reaction other) {
+        this.products = other.get_products();
+        this.reactants = other.get_reactants();
+        this.product_coefficients = other.get_product_coefficients();
+        this.delta_enthalpy = other.get_delta_enthalpy();
+        this.delta_entropy = other.get_delta_entropy();
+        this.reaction_key = other.get_reaction_key();
+    }
+
     /**
      * The get_products method will traverse the array list and return the products
      * @return is the products that were found
