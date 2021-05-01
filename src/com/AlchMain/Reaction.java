@@ -8,6 +8,9 @@ public class Reaction {
 
     }
 
+    /**
+    * The copy_from method will set the values of the current reaction to the inputted reaction
+    */
     public void copy_from(Reaction other) {
         this.products = other.get_products();
         this.reactants = other.get_reactants();
