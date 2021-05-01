@@ -58,9 +58,16 @@ public class Droplet {
     /**
     * The update_temp will add the change of temperature to the temperature variable.
     */
-    public void update_temp() {     //^^^
+    public void update_temp() {
         temperature = temperature + dTemp;
+        if (temperature <= 0) {
+            temperature = 0.01;
+        }
+        else if (temperature > 1000000) {
+            temperature = 1000000;
+        }
     }
+
     //public Droplet clone() {}
     /**
     * The copy_into will take the inputted droplet and set its variables equal to the one calling the function
@@ -173,7 +180,15 @@ public class Droplet {
     * The set_temperature method will change the value of the temperature variable.
     * @param new_value, the new value of temperature
     */
-    public void set_temperature(double new_value) { temperature = new_value; }
+    public void set_temperature(double new_value) {
+        temperature = new_value;
+        if (temperature <= 0) {
+            temperature = 0.01;
+        }
+        else if (temperature > 1000000) {
+            temperature = 1000000;
+        }
+    }
     
     /**
     * The set_density method will change the value of the density variable.

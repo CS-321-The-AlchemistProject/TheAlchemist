@@ -51,9 +51,18 @@ public class ChemicalDatabase {
 				entry.set_sp_heat_gas(Double.parseDouble(tempList[i++]));
 				entry.set_thermal_cond_gas(Double.parseDouble(tempList[i++]));
 				entry.set_thermal_diff_gas(Double.parseDouble(tempList[i++]));
-				entry.set_gas_density(Double.parseDouble(tempList[i++])); 
-	
-				entry.set_color(tempList[i++]);
+				entry.set_gas_density(Double.parseDouble(tempList[i++]));
+
+				String delims = "[ rgb(),]+";
+				String[] split_color = tempList[i].split(delims);
+				ArrayList<Integer> color_list = new ArrayList<Integer>();
+				for (int n = 0; n < split_color.length; n++) {
+					if (!(split_color[n].equals(""))) {
+						color_list.add(Integer.parseInt(split_color[n]));
+					}
+				}
+				entry.set_color(color_list);
+
 				entry.set_chem_key(tempList[0]);
 				//entry.set_is_insulated (tempList.get()) no info in data				
 

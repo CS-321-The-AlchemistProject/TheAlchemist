@@ -27,10 +27,6 @@ public class ReactionDatabase {
 		return reactions.containsKey(reaction_key); 
 	}
 
-	public Reaction get_throwaway_reaction() {
-		return throw_away_reaction;
-	}
-
 	/**
 	* The initialize_db method will read the file containing all the reactions and will create array lists to hold the information.
 	* It will also set the variables equal to the corresponding information from the file.
@@ -75,7 +71,6 @@ public class ReactionDatabase {
 //				if(coeff2 != -1)
 //					product_coefficients.add(coeff2);
 				String[] coeffs_list = tempList[3].split("[\\]\\[,]+");
-				System.out.println(tempList[3]);
 				String[] coeffs_list2 = new String[coeffs_list.length-1];
 				for (int n = 1; n < coeffs_list.length; n++) {
 					coeffs_list2[n-1] = coeffs_list[n];

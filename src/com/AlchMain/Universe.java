@@ -1,5 +1,10 @@
 package com.AlchMain;
 
+import AlchMain.Chemical;
+import AlchMain.Droplet;
+import AlchMain.Reaction;
+import AlchMain.State;
+
 import java.util.*;
 import java.lang.Math;
  
@@ -15,8 +20,11 @@ public class Universe {
         this.screen_height = num_cols;
         g = 9.81;
         pressure_constant = 5;
-        dt = 0.2;
-        set_dx(0.000264583);
+        thermal_radiation_constant = 0.97;
+        dt = 0.02;
+        //set_dx(0.000264583);
+        set_dx(0.00024583);
+        //System.out.println(inv_dx_squared);
         random = new Random();
 
         chemical_database = new ChemicalDatabase();
@@ -25,7 +33,7 @@ public class Universe {
 
         reaction_database = new ReactionDatabase();
         reaction_database.initialize_db();
-        reaction_database.print_db();
+        //reaction_database.print_db();
 
         universe = new Droplet[num_rows][num_cols];
 
@@ -121,7 +129,12 @@ public class Universe {
         double right_temp;
 
         if (is_empty(x, y-1)) {
-            top_temp = universe[x][y].get_temperature();
+            if (!(universe[x][y].get_current_state() == State.gas)) {
+                top_temp = universe[x][y].get_temperature() * thermal_radiation_constant;
+            }
+            else {
+                top_temp = universe[x][y].get_temperature();
+            }
         }
         else if (universe[x][y-1].get_chem_type().get_name().equals("Barrier")) {
             top_temp = universe[x][y].get_temperature();
@@ -130,7 +143,12 @@ public class Universe {
             top_temp = universe[x][y-1].get_temperature();
 
         if (is_empty(x, y+1)) {
-            bottom_temp = universe[x][y].get_temperature();
+            if (!(universe[x][y].get_current_state() == State.gas)) {
+                bottom_temp = universe[x][y].get_temperature() * thermal_radiation_constant;
+            }
+            else {
+                bottom_temp = universe[x][y].get_temperature();
+            }
         }
         else if (universe[x][y+1].get_chem_type().get_name().equals("Barrier")) {
             bottom_temp = universe[x][y].get_temperature();
@@ -139,7 +157,12 @@ public class Universe {
             bottom_temp = universe[x][y+1].get_temperature();
 
         if (is_empty(x-1, y)) {
-            left_temp = universe[x][y].get_temperature();
+            if (!(universe[x][y].get_current_state() == State.gas)) {
+                left_temp = universe[x][y].get_temperature() * thermal_radiation_constant;
+            }
+            else {
+                left_temp = universe[x][y].get_temperature();
+            }
         }
         else if (universe[x-1][y].get_chem_type().get_name().equals("Barrier")) {
             left_temp = universe[x][y].get_temperature();
@@ -148,7 +171,12 @@ public class Universe {
             left_temp = universe[x-1][y].get_temperature();
 
         if (is_empty(x+1, y)) {
-            right_temp = universe[x][y].get_temperature();
+            if (!(universe[x][y].get_current_state() == State.gas)) {
+                right_temp = universe[x][y].get_temperature() * thermal_radiation_constant;
+            }
+            else {
+                right_temp = universe[x][y].get_temperature();
+            }
         }
         else if (universe[x+1][y].get_chem_type().get_name().equals("Barrier")) {
             right_temp = universe[x][y].get_temperature();
@@ -156,152 +184,87 @@ public class Universe {
         else
             right_temp = universe[x+1][y].get_temperature();
 
-        return (universe[current_x][current_y].get_thermal_diffusivity() / inv_dx_squared)
+        if (is_empty(x, y+1) && is_empty(x, y-1) && is_empty(x+1, y) && is_empty(x-1, y)) {
+            top_temp = universe[x][y].get_temperature();
+            bottom_temp = universe[x][y].get_temperature();
+            left_temp = universe[x][y].get_temperature();
+            right_temp = universe[x][y].get_temperature();
+        }
+
+        double return_value = ((universe[x][y].get_thermal_diffusivity() * inv_dx_squared)
                 * (top_temp + bottom_temp + left_temp + right_temp
-                - 4 * universe[current_x][current_y].get_temperature()) * dt;
+                - 4 * universe[x][y].get_temperature())) * dt;
+        if (return_value > 1000.0)
+            return_value = 1000.0;
+        else if (return_value < -1000.0)
+            return_value = -1000.0;
+
+        return return_value;
     }
  
- /*
+ /**
  * The react method will determine if a reaction is occuring between two chemicals.
  * @param x, the coordinate in the x-axis
  * @param y, the coordinate in the y-axis
  */
     public void react(int x, int y) {
-        Droplet above = universe[x][y+1];
-        Droplet below = universe[x][y-1];
-        Droplet left = universe[x-1][y];
-        Droplet right = universe[x+1][y];
+        Integer[] up = { 0 , -1 };
+        Integer[] down = { 0 , 1 };
+        Integer[] left = { -1 , 0 };
+        Integer[] right = { 1 , 0 };
         Droplet center = universe[x][y];
-        if (is_empty(x, y+1)) {
-            above = new Droplet(chemical_database.get_chemical(0), 0.1, 1);
-        }
-        if (is_empty(x, y-1)) {
-            below = new Droplet(chemical_database.get_chemical(0), 0.1, 1);
-        }
-        if (is_empty(x-1, y)) {
-            left = new Droplet(chemical_database.get_chemical(0), 0.1, 1);
-        }
-        if (is_empty(x+1, y)) {
-            right = new Droplet(chemical_database.get_chemical(0), 0.1, 1);
-        }
+        ArrayList<Integer[]> direction_list = new ArrayList<Integer[]>();
+        direction_list.add(up);
+        direction_list.add(down);
+        direction_list.add(left);
+        direction_list.add(right);
 
-        double above_temp = above.get_temperature() + center.get_temperature();
-        double below_temp = below.get_temperature() + center.get_temperature();
-        double left_temp = left.get_temperature() + center.get_temperature();
-        double right_temp = right.get_temperature() + center.get_temperature();
-        double center_temp = center.get_temperature();
-
-        String above_reactants = center.get_chem_type().get_formula()
-                + above.get_chem_type().get_formula();
-        String below_reactants = center.get_chem_type().get_formula()
-                + below.get_chem_type().get_formula();
-        String left_reactants = center.get_chem_type().get_formula()
-                + left.get_chem_type().get_formula();
-        String right_reactants = center.get_chem_type().get_formula()
-                + right.get_chem_type().get_formula();
-
-        ArrayList<Reaction> above_reactions = reaction_database.get_reaction(above_reactants);
-        ArrayList<Reaction> below_reactions = reaction_database.get_reaction(below_reactants);
-        ArrayList<Reaction> left_reactions = reaction_database.get_reaction(left_reactants);
-        ArrayList<Reaction> right_reactions = reaction_database.get_reaction(right_reactants);
-
-        double temp_R_ln_k = -1.0;
-        double max_R_ln_k_above = -1.0;
-        int index_of_max_above = 0;
-        if (!(above_reactions == null)) {
-            for (int n = 0; n < above_reactions.size(); n++) {
-                temp_R_ln_k = above_reactions.get(n).get_delta_entropy()
-                        - above_reactions.get(n).get_delta_enthalpy() / above_temp;
-                if (temp_R_ln_k > max_R_ln_k_above) {
-                    max_R_ln_k_above = temp_R_ln_k;
-                    index_of_max_above = n;
-                }
-            }
-        }
-        double max_R_ln_k_below = -1.0;
-        int index_of_max_below = 0;
-        if (!(below_reactions == null)) {
-            for (int n = 0; n < below_reactions.size(); n++) {
-                temp_R_ln_k = below_reactions.get(n).get_delta_entropy()
-                        - below_reactions.get(n).get_delta_enthalpy() / below_temp;
-                if (temp_R_ln_k > max_R_ln_k_below) {
-                    max_R_ln_k_below = temp_R_ln_k;
-                    index_of_max_below = n;
-                }
-            }
-        }
-        double max_R_ln_k_left = -1.0;
-        int index_of_max_left = 0;
-        if (!(left_reactions == null)) {
-            for (int n = 0; n < left_reactions.size(); n++) {
-                temp_R_ln_k = left_reactions.get(n).get_delta_entropy()
-                        - left_reactions.get(n).get_delta_enthalpy() / left_temp;
-                if (temp_R_ln_k > max_R_ln_k_left) {
-                    max_R_ln_k_left = temp_R_ln_k;
-                    index_of_max_left = n;
-                }
-            }
-        }
-        double max_R_ln_k_right = -1.0;
-        int index_of_max_right = 0;
-        if (!(right_reactions == null)) {
-            for (int n = 0; n < right_reactions.size(); n++) {
-                temp_R_ln_k = right_reactions.get(n).get_delta_entropy()
-                        - right_reactions.get(n).get_delta_enthalpy() / right_temp;
-                if (temp_R_ln_k > max_R_ln_k_right) {
-                    max_R_ln_k_right = temp_R_ln_k;
-                    index_of_max_right = n;
+        ArrayList<Reaction> reaction_list = new ArrayList<Reaction>();
+        ArrayList<Integer[]> direction_mirror = new ArrayList<Integer[]>();
+        ArrayList<Double> R_ln_k_list = new ArrayList<Double>();
+        //ArrayList<Double> temperature_list = new ArrayList<Double>();
+        for (int n = 0; n < direction_list.size(); n++) {
+            if (!(is_empty(x + direction_list.get(n)[0], y + direction_list.get(n)[1]))) {
+                Droplet other = universe[x + direction_list.get(n)[0]][y + direction_list.get(n)[1]];
+                double temperature = other.get_temperature() + center.get_temperature();
+                String reactants = center.get_chem_type().get_formula()
+                        + other.get_chem_type().get_formula();
+                ArrayList<Reaction> reactions = reaction_database.get_reaction(reactants);
+                if (!(reactions == null)) {
+                    for (int m = 0; m < reactions.size(); m++) {
+                        Double temp_R_ln_k = reactions.get(m).get_delta_entropy()
+                                - (reactions.get(m).get_delta_enthalpy() / temperature);
+                        if (temp_R_ln_k > 0) {
+                            reaction_list.add(reactions.get(m));
+                            direction_mirror.add(direction_list.get(n));
+                            R_ln_k_list.add(temp_R_ln_k);
+                            //temperature_list.add(temperature);
+                        }
+                    }
                 }
             }
         }
 
-        ArrayList<Double> max_R_ln_k_s = new ArrayList<Double>();
-        ArrayList<Reaction> possible_reactions = new ArrayList<Reaction>();
-        max_R_ln_k_s.add(max_R_ln_k_above);
-        if (!(above_reactions == null)) {
-            possible_reactions.add(above_reactions.get(index_of_max_above));
-        }
-        else {
-            possible_reactions.add(reaction_database.get_throwaway_reaction());
-        }
-        max_R_ln_k_s.add(max_R_ln_k_below);
-        if (!(below_reactions == null)) {
-            possible_reactions.add(below_reactions.get(index_of_max_below));
-        }
-        else {
-            possible_reactions.add(reaction_database.get_throwaway_reaction());
-        }
-        max_R_ln_k_s.add(max_R_ln_k_left);
-        if (!(left_reactions == null)) {
-            possible_reactions.add(left_reactions.get(index_of_max_left));
-        }
-        else {
-            possible_reactions.add(reaction_database.get_throwaway_reaction());
-        }
-        max_R_ln_k_s.add(max_R_ln_k_right);
-        if (!(right_reactions == null)) {
-            possible_reactions.add(right_reactions.get(index_of_max_right));
-        }
-        else {
-            possible_reactions.add(reaction_database.get_throwaway_reaction());
-        }
-        Reaction chosen_reaction = new Reaction();
-        double max_R_ln_k = -1.0;
-        int chosen_identifier = -1;
-        for (int n = 0; n < 4; n++) {
-            if (max_R_ln_k_s.get(n) > max_R_ln_k) {
-                max_R_ln_k = max_R_ln_k_s.get(n);
-                chosen_reaction.copy_from(possible_reactions.get(n));
-                chosen_identifier = n;
+        int index_of_max = -1;
+        Double max_R_ln_k = -1.0;
+        if (reaction_list.size() > 0) {
+            for (int n = 0; n < reaction_list.size(); n++) {
+                if (R_ln_k_list.get(n) > max_R_ln_k) {
+                    max_R_ln_k = R_ln_k_list.get(n);
+                    index_of_max = n;
+                }
             }
+        }
+        Reaction chosen_reaction = null;
+        Integer[] chosen_direction = null;
+        if (index_of_max >= 0) {
+            chosen_reaction = reaction_list.get(index_of_max);
+            chosen_direction = direction_mirror.get(index_of_max);
         }
 
         int num_compressed_1 = 0;
         int num_compressed_2 = 0;
-        if (max_R_ln_k <= 0) {
-            return;
-        }
-        else {
+        if (!(chosen_reaction == null)) {
             Chemical product1 = chosen_reaction.get_products().get(0);;
             Chemical product2 = new Chemical();
             if (chosen_reaction.get_product_coefficients().size() > 1) {
@@ -315,54 +278,22 @@ public class Universe {
                         / (double) 2);
                 num_compressed_2 = chosen_reaction.get_product_coefficients().get(0) - num_compressed_1;
             }
-            if (chosen_identifier == 0) {
-                universe[x][y] = new Droplet(product1, center_temp, num_compressed_1);
-                universe[x][y+1] = new Droplet(product2, above_temp, num_compressed_2);
-                double new_center_temp = center_temp + 0.5 * chosen_reaction.get_delta_enthalpy()
-                        / universe[x][y].get_specific_heat();
-                double new_above_temp = above_temp + 0.5 * chosen_reaction.get_delta_enthalpy()
-                        / universe[x][y+1].get_specific_heat();
-                universe[x][y].set_temperature(new_center_temp);
-                universe[x][y+1].set_temperature(new_above_temp);
-                universe[x][y].set_has_reacted(true);
-                universe[x][y+1].set_has_reacted(true);
-            }
-            else if (chosen_identifier == 1) {
-                universe[x][y] = new Droplet(product1, center_temp, num_compressed_1);
-                universe[x][y-1] = new Droplet(product2, below_temp, num_compressed_2);
-                double new_center_temp = center_temp + 0.5 * chosen_reaction.get_delta_enthalpy()
-                        / universe[x][y].get_specific_heat();
-                double new_below_temp = below_temp + 0.5 * chosen_reaction.get_delta_enthalpy()
-                        / universe[x][y-1].get_specific_heat();
-                universe[x][y].set_temperature(new_center_temp);
-                universe[x][y-1].set_temperature(new_below_temp);
-                universe[x][y].set_has_reacted(true);
-                universe[x][y-1].set_has_reacted(true);
-            }
-            else if (chosen_identifier == 2) {
-                universe[x][y] = new Droplet(product1, center_temp, num_compressed_1);
-                universe[x-1][y] = new Droplet(product2, left_temp, num_compressed_2);
-                double new_center_temp = center_temp + 0.5 * chosen_reaction.get_delta_enthalpy()
-                        / universe[x][y].get_specific_heat();
-                double new_left_temp = left_temp + 0.5 * chosen_reaction.get_delta_enthalpy()
-                        / universe[x-1][y].get_specific_heat();
-                universe[x][y].set_temperature(new_center_temp);
-                universe[x-1][y].set_temperature(new_left_temp);
-                universe[x][y].set_has_reacted(true);
-                universe[x-1][y].set_has_reacted(true);
-            }
-            else {
-                universe[x][y] = new Droplet(product1, center_temp, num_compressed_1);
-                universe[x+1][y] = new Droplet(product2, right_temp, num_compressed_2);
-                double new_center_temp = center_temp + 0.5 * chosen_reaction.get_delta_enthalpy()
-                        / universe[x][y].get_specific_heat();
-                double new_right_temp = right_temp + 0.5 * chosen_reaction.get_delta_enthalpy()
-                        / universe[x+1][y].get_specific_heat();
-                universe[x][y].set_temperature(new_center_temp);
-                universe[x+1][y].set_temperature(new_right_temp);
-                universe[x][y].set_has_reacted(true);
-                universe[x+1][y].set_has_reacted(true);
-            }
+            universe[x][y] = new Droplet(product1, universe[x][y].get_temperature(), num_compressed_1);
+            universe[x + chosen_direction[0]][y + chosen_direction[1]]
+                    = new Droplet(product2,
+                    universe[x + chosen_direction[0]][y + chosen_direction[1]].get_temperature(),
+                    num_compressed_2);
+            double new_center_temp = universe[x][y].get_temperature()
+                    + 0.5 * (- chosen_reaction.get_delta_enthalpy()
+                    / universe[x][y].get_specific_heat());
+            double new_other_temp =
+                    universe[x + chosen_direction[0]][y + chosen_direction[1]].get_temperature()
+                            + 0.5 * (- chosen_reaction.get_delta_enthalpy()
+                            / universe[x + chosen_direction[0]][y + chosen_direction[1]].get_specific_heat());
+            universe[x][y].set_temperature(new_center_temp);
+            universe[x + chosen_direction[0]][y + chosen_direction[1]].set_temperature(new_other_temp);
+            universe[x][y].set_has_reacted(true);
+            universe[x + chosen_direction[0]][y + chosen_direction[1]].set_has_reacted(true);
         }
     }
     
@@ -946,23 +877,24 @@ public class Universe {
     */
     public void set_dx(double new_value) {
         dx = new_value;
-        inv_dx_squared = 1 / (dx * dx);
+        inv_dx_squared = 1.0 / (dx * dx);
     }
 
     //Declaration of variables
     private Random random;
-    private final Droplet[][] universe;
+    private Droplet[][] universe;
     private final ReactionDatabase reaction_database;
     private final ChemicalDatabase chemical_database;
     private int cursor_x;
     private int cursor_y;
     private int current_x;
     private int current_y;
-    private final int screen_width; //Temporary variables
-    private final int screen_height; //Temporary variables
-    private double g;
-    private double pressure_constant;
-    private double dt;
-    private double dx;
-    public  double inv_dx_squared;
+    private final int screen_width;
+    private final int screen_height;
+    private static double g;
+    private static double pressure_constant;
+    private static double thermal_radiation_constant;
+    private static double dt;
+    private static double dx;
+    public static double inv_dx_squared;
 }

@@ -1,14 +1,20 @@
 package com.AlchMain;
 
+import AlchMain.ChemicalDatabase;
+import AlchMain.Droplet;
+import AlchMain.Universe;
+import AlchMain.UniverseDisplay;
+
 import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 
 public class AlchGUI extends Canvas implements Runnable, MouseListener, MouseMotionListener,
         ActionListener {
 
-    public static final int DISPLAY_WIDTH = 1000;
+    public static final int DISPLAY_WIDTH = 1200;
     public static final int DISPLAY_HEIGHT = 750;
 
     public static final int SHIFT_X = 10;
@@ -27,6 +33,13 @@ public class AlchGUI extends Canvas implements Runnable, MouseListener, MouseMot
     boolean drawing = false;
     public static String brush_chem = "H2O";
     public static double brush_temp = 273.15;
+    public static int brush_size = 15;
+    enum View {
+        CHEM_VIEW,
+        TEMP_VIEW
+    }
+    public static AlchMain.AlchGUI.View view_state = AlchMain.AlchGUI.View.CHEM_VIEW;
+
 
     public AlchGUI() {
         universe = new Universe(UNIVERSE_WIDTH, UNIVERSE_HEIGHT);
@@ -53,16 +66,8 @@ public class AlchGUI extends Canvas implements Runnable, MouseListener, MouseMot
         if (droplet == null) {
             return new Color(0, 0, 0);
         }
-        String color_string = droplet.get_chem_type().get_color();
-        String delims = "[ rgb(),]+";
-        String[] split_color = color_string.split(delims);
-        int[] color_values = new int[3];
-        for (int n = 0; n < 3; n += 1) {
-            if (!(split_color[n].equals(""))) { //changed to incorporate .equals
-                color_values[n] = Integer.parseInt(split_color[n]);
-            }
-        }
-        return new Color(color_values[0], color_values[1], color_values[2]);
+        ArrayList<Integer> color_values = droplet.get_chem_type().get_color();
+        return new Color(color_values.get(0), color_values.get(1), color_values.get(2));
     }
 
     public synchronized void start() {
@@ -79,8 +84,7 @@ public class AlchGUI extends Canvas implements Runnable, MouseListener, MouseMot
             e.printStackTrace();
         }
     }
-    
-    @Override
+
     public void run() {
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
@@ -112,8 +116,8 @@ public class AlchGUI extends Canvas implements Runnable, MouseListener, MouseMot
 
     private void tick() {
         if (drawing) {
-            for (int n = mx - 15; n < mx + 15; n += 1) {
-                for (int m = my - 15; m < my + 15; m += 1) {
+            for (int n = mx - brush_size; n < mx + brush_size; n += 1) {
+                for (int m = my - brush_size; m < my + brush_size; m += 1) {
                     if (n > SHIFT_X+1 && n < UNIVERSE_WIDTH+SHIFT_X-2
                             && m > SHIFT_Y+1 && m < UNIVERSE_HEIGHT+SHIFT_Y-2) {
                         if (cd.search(brush_chem) != -1) {
@@ -128,7 +132,7 @@ public class AlchGUI extends Canvas implements Runnable, MouseListener, MouseMot
             }
         }
 
-       universe.update_universe();
+        universe.update_universe();
     }
 
     private void render() {
@@ -148,7 +152,25 @@ public class AlchGUI extends Canvas implements Runnable, MouseListener, MouseMot
     public void render_color_matrix(Graphics g) {
         for (int n = 0; n < UNIVERSE_WIDTH; n += 1) {
             for (int m = 0; m < UNIVERSE_HEIGHT; m += 1) {
-                Color temp_color = parse_color_from_droplet(universe.get_droplet(n, m));
+                Color temp_color = new Color(0, 0, 0);
+                if (view_state == AlchMain.AlchGUI.View.CHEM_VIEW) {
+                    temp_color = parse_color_from_droplet(universe.get_droplet(n, m));
+                }
+                else if (view_state == AlchMain.AlchGUI.View.TEMP_VIEW) {
+                    if (universe.is_empty(n, m)) {
+                        temp_color = new Color(0, 0, 0);
+                    } else {
+                        int red_color = (int) (255 / (1 + Math.exp(-0.006
+                                * (universe.get_droplet(n, m).get_temperature() - 500))));
+                        int green_color = (int) (255 / (1 + Math.exp(-0.01
+                                * (universe.get_droplet(n, m).get_temperature() - 1500))));
+                        int blue_color = (int) ((255 / (1 + Math.exp(-0.01
+                                * (universe.get_droplet(n, m).get_temperature() - 1500))))
+                                + (255 / (1 + Math.exp(0.04
+                                * (universe.get_droplet(n, m).get_temperature() - 100)))));
+                        temp_color = new Color(red_color, green_color, blue_color);
+                    }
+                }
                 if (temp_color != color_matrix[n][m]) {
                     color_matrix[n][m] = temp_color;
                     g.setColor(color_matrix[n][m]);
@@ -201,17 +223,8 @@ public class AlchGUI extends Canvas implements Runnable, MouseListener, MouseMot
 
     @Override
     public void actionPerformed(ActionEvent e) {
-//        String s = e.getActionCommand();
-//        if (s.equals("submit1")) {
-//            this.brush_chem = UniverseDisplay.text1.getText();
-//        }
-//        else if (s.equals("submit2")) {
-//            this.brush_temp = Double.parseDouble(UniverseDisplay.text2.getText());
-//        }
-    }
 
-//    public void set_brush_chem(String new_value) { this.brush_chem = new_value; }
-//    public void set_brush_temp(double new_value) { this.brush_temp = new_value; }
+    }
 
     public static void main(String[] args) {
         new AlchGUI();

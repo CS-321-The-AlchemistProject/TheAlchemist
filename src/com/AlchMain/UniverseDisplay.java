@@ -1,5 +1,7 @@
 package com.AlchMain;
 
+import AlchMain.AlchGUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,12 +10,15 @@ public class UniverseDisplay extends Canvas implements MouseListener, ActionList
     public String brush_chem = "H2O";
     public double brush_temp = 273.15;
 
-    public final static JLabel label1 = new JLabel("nothing entered");
-    public final static JButton button1 = new JButton("submit1");
-    public final static JTextField text1 = new JTextField(16);
-    public final static JLabel label2 = new JLabel("nothing entered");
-    public final static JButton button2 = new JButton("submit2");
-    public final static  JTextField text2 = new JTextField(16);
+    public static JLabel label1 = new JLabel("Enter Chemical and Temperature.");
+    public static JButton button1 = new JButton("Submit Chem");
+    public static JButton button2 = new JButton("Submit Temp");
+    public static JTextField text1 = new JTextField(10);
+    public static JButton button3 = new JButton("Chem View");
+    public static JButton button4 = new JButton("Temp View");
+    public static JButton button5 = new JButton("Brush Size");
+    public static JTextField text2 = new JTextField(10);
+    public static JTextField text3 = new JTextField(3);
 
     /**
     * The UniverseDisplay will set up the GUI to draw the universe.
@@ -32,19 +37,18 @@ public class UniverseDisplay extends Canvas implements MouseListener, ActionList
         frame.setLayout(grid_bag);
         GridBagConstraints c = new GridBagConstraints();
 
-//        JLabel label1 = new JLabel("nothing entered");
-//        JButton button1 = new JButton("submit1");
-//        JTextField text1 = new JTextField(16);
-//        JLabel label2 = new JLabel("nothing entered");
-//        JButton button2 = new JButton("submit2");
-//        JTextField text2 = new JTextField(16);
-
         frame.addMouseListener(this);
         button1.addActionListener(this);
+        button2.addActionListener(this);
+        button3.addActionListener(this);
+        button4.addActionListener(this);
+        button5.addActionListener(this);
 
         JPanel panel1 = new JPanel();
         panel1.add(text1);
         panel1.add(button1);
+        panel1.add(text2);
+        panel1.add(button2);
         panel1.add(label1);
         c.fill = GridBagConstraints.PAGE_START;
         c.weightx = 0.5;
@@ -54,14 +58,23 @@ public class UniverseDisplay extends Canvas implements MouseListener, ActionList
         frame.add(panel1, c);
 
         JPanel panel2 = new JPanel();
-        panel2.add(text2);
-        panel2.add(button2);
-        panel2.add(label2);
+        panel2.add(button3);
+        panel2.add(button4);
         c.weightx = 0.5;
         c.gridx = 1;
         c.gridy = 0;
         grid_bag.setConstraints(panel2, c);
         frame.add(panel2, c);
+
+        JPanel panel3 = new JPanel();
+        panel3.add(text3);
+        panel3.add(button5);
+        c.fill = GridBagConstraints.PAGE_START;
+        c.weightx = 0.5;
+        c.gridx = 2;
+        c.gridy = 0;
+        grid_bag.setConstraints(panel3, c);
+        frame.add(panel3, c);
 
         c.fill = GridBagConstraints.CENTER;
         c.ipadx = AlchGUI.UNIVERSE_WIDTH;
@@ -78,7 +91,6 @@ public class UniverseDisplay extends Canvas implements MouseListener, ActionList
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         alchGui.start();
-
     }
 
     /**
@@ -130,13 +142,32 @@ public class UniverseDisplay extends Canvas implements MouseListener, ActionList
     @Override
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
-        if (s.equals("submit1")) {
+        System.out.println(s);
+        if (s.equals("Submit Chem")) {
             AlchGUI.brush_chem = text1.getText();
-            AlchGUI.brush_temp = Double.parseDouble(text2.getText());
         }
-        if (s.equals("submit2")) {
-            AlchGUI.brush_temp = Double.parseDouble(text2.getText());
-            System.out.println(AlchGUI.brush_temp);
+        if (s.equals("Submit Temp")) {
+            if (!(text2.getText().equals(""))) {
+                AlchGUI.brush_temp = Double.parseDouble(text2.getText());
+            }
+            else {
+                AlchGUI.brush_temp = 0.01;
+            }
+        }
+        if (s.equals("Chem View")) {
+            AlchGUI.view_state = AlchGUI.View.CHEM_VIEW;
+        }
+        if (s.equals("Temp View")) {
+            AlchGUI.view_state = AlchGUI.View.TEMP_VIEW;
+        }
+        if (s.equals("Brush Size")) {
+            AlchGUI.brush_size = Integer.parseInt(text3.getText());
+            if (AlchGUI.brush_size <= 0) {
+                AlchGUI.brush_size = 1;
+            }
+            else if (AlchGUI.brush_size > 300) {
+                AlchGUI.brush_size = 300;
+            }
         }
     }
 }

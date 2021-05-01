@@ -1,5 +1,7 @@
 package com.AlchMain;
 
+import java.util.ArrayList;
+
 public class Chemical {
 
     public Chemical() {
@@ -201,7 +203,7 @@ public class Chemical {
     * The set_color method will change the color of the chemical to the inputted color.
     * @param new_value, the new color
     */
-    public void set_color(String new_value) { color = new_value; }
+    public void set_color(ArrayList<Integer> new_value) { color = new_value; }
     /**
     * The set_chem_key method will change the key of the chemical to the inputted value.
     * @param new_value, the new key of the chemical
@@ -235,7 +237,7 @@ public class Chemical {
     private double gas_density;
     private double liq_density;
     private double sol_density;
-    private String color;
+    private ArrayList<Integer> color;
     private String chem_key;
     private boolean is_insulated;
     private String CAS_num;
