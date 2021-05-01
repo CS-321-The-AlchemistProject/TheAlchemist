@@ -15,6 +15,13 @@ public class UniverseDisplay extends Canvas implements MouseListener, ActionList
     public final static JButton button2 = new JButton("submit2");
     public final static  JTextField text2 = new JTextField(16);
 
+    /**
+    * The UniverseDisplay will set up the GUI to draw the universe.
+    * @param width, the desired width of the grid
+    * @param height, the desired height of the grid
+    * @param title, the title of the frame
+    * @param alchGui, the object of alchGUI that will have the items set
+    */
     public UniverseDisplay(int width, int height, String title, AlchGUI alchGui) {
         JFrame frame = new JFrame(title);
 
@@ -74,33 +81,52 @@ public class UniverseDisplay extends Canvas implements MouseListener, ActionList
 
     }
 
+    /**
+    * The mouseClicked method will check if the mouse has been clicked.
+    */
     @Override
     public void mouseClicked(MouseEvent e) {
 
     }
 
+    /**
+    * The mousePressed method will check if the mouse has been pressed.
+    */
     @Override
     public void mousePressed(MouseEvent e)
     {
 
     }
 
+    /**
+    * The mouseReleased method will check if the mouse has been released.
+    */
     @Override
     public void mouseReleased(MouseEvent e)
     {
 
     }
 
+    /**
+    * The mouseEntered method will check if the mouse event has been entered.
+    */
     @Override
     public void mouseEntered(MouseEvent e) {
 
     }
 
+    /**
+    * The mouseExited method will check if the mouse event has been exited.
+    */
     @Override
     public void mouseExited(MouseEvent e) {
 
     }
 
+    /**
+    * The actionPerformed method will take action depending on which text box the information is placed in. One will gather the chemical while the other will change the temperature.
+    * @param e, is the action event
+    */
     @Override
     public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
