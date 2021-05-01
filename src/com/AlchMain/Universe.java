@@ -161,7 +161,10 @@ public class Universe {
                 - 4 * universe[current_x][current_y].get_temperature()) * dt;
     }
  
- /***************************************************************
+ /*
+ * The react method will determine if a reaction is occuring between two chemicals.
+ * @param x, the coordinate in the x-axis
+ * @param y, the coordinate in the y-axis
  */
     public void react(int x, int y) {
         Droplet above = universe[x][y+1];
