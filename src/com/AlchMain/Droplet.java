@@ -2,6 +2,12 @@ package com.AlchMain;
 
 public class Droplet {
 
+    /**
+    * The Droplet constructor will set the chemical, temp, and the number compressed. It will also build the base state of the droplet.
+    * @param chem, the chemical type
+    * @param temp, the temperature 
+    * @param new_compressed, the number of compressed chemicals in a single block
+    */
     public Droplet(Chemical chem, double temp, int new_compressed) {
         this.chem_type = chem;
         this.temperature = temp;
@@ -107,10 +113,22 @@ public class Droplet {
     */
     public double get_density() { return density; }
 
+    /**
+    * The get_specific_heat method will return the specific heat of the droplet
+    * @return specific_heat, the specific heat of the droplet
+    */
     public double get_specific_heat() { return specific_heat; }
 
+    /**
+    * The get_thermal_diffusivity method will return the thermal diffusivity of the droplet
+    * @return thermal_diffusivity, the thermal diffusivity of the droplet
+    */
     public double get_thermal_diffusivity() { return thermal_diffusivity; }
 
+    /**
+    * The get_thermal_conductivity method will return the thermal conductivity of the droplet
+    * @return thermal_conductivity, the thermal conductivity of the droplet
+    */
     public double get_thermal_conductivity() { return thermal_conductivity; }
     
     /**
@@ -163,10 +181,22 @@ public class Droplet {
     */
     public void set_density(double new_value) { density = new_value; }
 
+    /**
+    * The set_specific_heat method will change the value of the specific heat variable.
+    * @param new_value, the new value of the specific_heat
+    */
     public void set_specific_heat(double new_value) { specific_heat = new_value; }
 
+    /**
+    * The set_thermal_diffusivity method will change the value of the thermal_diffusivity variable.
+    * @param new_value, the new value of the thermal diffusivity
+    */
     public void set_thermal_diffusivity(double new_value) { thermal_diffusivity = new_value; }
 
+    /**
+    * The set_thermal_conductivity method will change the value of the thermal_conductivity variable.
+    * @param new_value, the new value of the thermal conductivity
+    */
     public void set_thermal_conductivity(double new_value) { thermal_conductivity = new_value; }
     
     /**
