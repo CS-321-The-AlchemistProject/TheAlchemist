@@ -11,6 +11,11 @@ import java.lang.Math;
 public class Universe {
     //Functional methods
 
+ /**
+ * The Universe constructor will set the variables and create the universe.
+ * @param num_rows, how many rows will be made
+ * @param num_cols, how many columns there will be
+ */
     public Universe(int num_rows, int num_cols) {
         this.cursor_x = 0;
         this.cursor_y = 0;
